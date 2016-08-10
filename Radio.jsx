@@ -62,7 +62,9 @@ class Radio extends Component {
 
               { option.value }
 
-              { option.help ?
+              { option.help ? typeof option.help === 'string' ?
+                <div className='help-block' dangerouslySetInnerHTML={{__html: option.help}}/>
+              :
                 <div className='help-block'>
                   { option.help }
                 </div>
