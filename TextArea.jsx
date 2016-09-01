@@ -1,24 +1,39 @@
 import React, { Component, PropTypes } from 'react';
 import { HOC } from 'formsy-react';
+import classNames from 'classnames';
 
 import InputWrapper from './InputWrapper';
 
 
 class TextArea extends Component {
 
-  static propTypes: {
+  static propTypes = {
     name: PropTypes.string.isRequired,
     value: PropTypes.string,
     label: PropTypes.string,
     placeholder: PropTypes.string,
+    wrapperClasses: PropTypes.string,
     required: PropTypes.bool,
+    disabled: PropTypes.bool,
     cols: PropTypes.number,
     rows: PropTypes.number,
-    onChange: PropTypes.func.isRequired
-  }
+    onChange: PropTypes.func.isRequired,
+    setValue: PropTypes.func.isRequired,
+    getValue: PropTypes.func.isRequired,
+    isPristine: PropTypes.func.isRequired,
+    isValid: PropTypes.func.isRequired,
+    getErrorMessage: PropTypes.func.isRequired,
+    showRequired: PropTypes.func.isRequired,
+    children: PropTypes.node,
+  };
 
   static defaultProps = {
     type: 'text',
+  };
+
+  constructor(props, context) {
+    super(props, context);
+    this._changeValue = this.changeValue.bind(this);
   }
 
   changeValue(event) {
@@ -26,42 +41,30 @@ class TextArea extends Component {
   }
 
   render() {
-    const { name, label, placeholder } = this.props
-
-    let wrapperClasses = []
-    if (this.props.wrapperClasses)
-      wrapperClasses.push(this.props.wrapperClasses)
-
-    let opts = {};
-    if (this.props.required) {
-      opts['required'] = 'required';
-      wrapperClasses.push('required')
-    }
-    if (this.props.disabled) {
-      opts['disabled'] = 'disabled';
-      wrapperClasses.push('disabled');
-    }
-
-    for (const opt of ['cols', 'rows']) {
-      if (this.props[opt])
-        opts[opt] = this.props[opt]
-    }
-
-    if (!this.props.isPristine())
-      wrapperClasses.push(this.props.isValid() ? 'has-success' : 'has-error');
-
-    const htmlId = `id_${name}`;
+    const { name, label, required, disabled, cols, rows } = this.props;
+    const id = `id_${name}`;
+    const inputOpts = { id, name, required, disabled, cols, rows };
 
     return (
-      <InputWrapper id={htmlId} label={label} wrapperClasses={ wrapperClasses.join(' ') }>
+      <InputWrapper
+        id={id}
+        label={label}
+        wrapperClasses={classNames(
+          this.props.wrapperClasses, {
+            required,
+            disabled,
+            [`has-${this.props.isValid() ? 'success' : 'error'}`]: !this.props.isPristine(),
+          },
+        )}
+      >
 
-        <textarea className='form-control'
-               id={htmlId}
-               name={name}
-               value={ this.props.getValue() || '' }
-               placeholder={ placeholder ? placeholder : (label ? label : '') }
-               onChange={this.changeValue.bind(this)}
-               {...opts} />
+        <textarea
+          className='form-control'
+          {...inputOpts}
+          value={this.props.getValue() || ''}
+          placeholder={this.props.placeholder || label || ''}
+          onChange={this._changeValue}
+        />
 
         { this.props.children }
 
@@ -75,4 +78,4 @@ class TextArea extends Component {
   }
 }
 
-export default HOC(TextArea);
+export default HOC(TextArea); // eslint-disable-line new-cap

@@ -8,44 +8,49 @@ class Email extends Component {
   render() {
     const { verified, unverified } = this.props;
 
-    let status = unverified ? 'unverified' : verified ? 'verified' : null;
+    let status = null;
+    if (unverified) {
+      status = 'unverified';
+    } else if (verified) {
+      status = 'verified';
+    }
 
     let replaceStatusClass = null;
 
-    if (this.refs.input) {
-      const value = this.refs.input.getValue();
-      if (value)
+    if (this.input) {
+      const value = this.input.getValue();
+      status = null;
+      if (value) {
         status = value === verified ? 'verified' : 'unverified';
-      else
-        status = null;
+      }
 
-      if (this.refs.input.isValid() && status === 'unverified')
+      if (this.input.isValid() && status === 'unverified') {
         replaceStatusClass = 'has-warning';
+      }
     }
 
     return (
       <Input
         type='email'
-        ref='input'
+        ref={(c) => { this.input = c; }}
         value={unverified || verified || ''}
         addOnAfter={status}
-        wrapperClasses={`${status}`}
+        wrapperClasses={status}
         replaceStatusClass={replaceStatusClass}
         validations='isEmail'
         validationErrors={{
           isEmail: 'Must be a valid email.',
         }}
-        {...this.props}>
+        {...this.props}
+      >
 
         { unverified && verified && unverified !== verified ?
           <div className='unverified text-muted small'>
             <FormattedMessage
               id='email.unverified'
-              values={{
-                verified: verified,
-                unverified: unverified,
-              }}
-              defaultMessage="You haven't verified the email address {unverified} yet. We'll send notifications to {verified} until you do."/>
+              values={{ verified, unverified }}
+              defaultMessage="You haven't verified the email address {unverified} yet. We'll send notifications to {verified} until you do." // eslint-disable-line max-len
+            />
           </div>
         : null }
 
@@ -53,5 +58,10 @@ class Email extends Component {
     );
   }
 }
+
+Email.propTypes = {
+  verified: PropTypes.string,
+  unverified: PropTypes.string,
+};
 
 export default Email;

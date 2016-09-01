@@ -1,14 +1,35 @@
-import React, { Component } from 'react';
+import React, { PropTypes, Component } from 'react';
 import { HOC } from 'formsy-react';
+import classNames from 'classnames';
 
 import InputWrapper from './InputWrapper';
 
+
 class Select extends Component {
 
+  static propTypes = {
+    name: PropTypes.string.isRequired,
+    label: PropTypes.string,
+    required: PropTypes.bool,
+    disabled: PropTypes.bool,
+    options: PropTypes.array.isRequired,
+    wrapperClasses: PropTypes.string,
+    onChange: PropTypes.func,
+    setValue: PropTypes.func.isRequired,
+    getValue: PropTypes.func.isRequired,
+    isPristine: PropTypes.func.isRequired,
+    isValid: PropTypes.func.isRequired,
+    getErrorMessage: PropTypes.func.isRequired,
+    children: PropTypes.node,
+  };
+
   static defaultProps = {
-    type: 'text',
-    serverError: '',
-    onChange: function(event) {},
+    onChange: () => {},
+  };
+
+  constructor(props, context) {
+    super(props, context);
+    this._changeValue = this.changeValue.bind(this);
   }
 
   changeValue(event) {
@@ -17,39 +38,31 @@ class Select extends Component {
   }
 
   render() {
-    const { type, name, value, label, required, options } = this.props;
-
-    let wrapperClasses = []
-    if (this.props.wrapperClasses)
-      wrapperClasses.push(this.props.wrapperClasses)
-
-    let opts = {};
-    if (this.props.required) {
-      opts['required'] = 'required';
-      wrapperClasses.push('required');
-    }
-    if (this.props.disabled) {
-      opts['disabled'] = 'disabled';
-      wrapperClasses.push('disabled');
-    }
-
-    if (!this.props.isPristine())
-      wrapperClasses.push(this.props.isValid() ? 'has-success' : 'has-error');
+    const { name, required, disabled } = this.props;
+    const id = `id_${name}`;
+    const inputOpts = { id, name, required, disabled };
 
     return (
-      <InputWrapper id={`id_${name}`} label={label} wrapperClasses={ wrapperClasses.join(' ') }>
+      <InputWrapper
+        id={id}
+        label={this.props.label}
+        wrapperClasses={classNames(
+          this.props.wrapperClasses,
+          { required, disabled },
+          { [`has-${this.props.isValid() ? 'success' : 'error'}`]: !this.props.isPristine() }
+        )}
+      >
 
         <select
           className='form-control'
-          id={ `id_${name}` }
-          name={name}
+          {...inputOpts}
           value={this.props.getValue()}
-          onChange={this.changeValue.bind(this)}
-          {...opts}>
+          onChange={this._changeValue}
+        >
 
-            { options.map(option => (
-              <option key={ option.key } value={ option.key }>{ option.value }</option>
-            )) }
+          { this.props.options.map(option => (
+            <option key={option.key} value={option.key}>{ option.value }</option>
+          )) }
 
         </select>
 
@@ -64,4 +77,4 @@ class Select extends Component {
   }
 }
 
-export default HOC(Select);
+export default HOC(Select); // eslint-disable-line new-cap

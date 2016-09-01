@@ -1,25 +1,24 @@
 import React, { PropTypes } from 'react';
+import classNames from 'classnames';
 
-const InputWrapper = (props) => {
-  let wrapperClasses = 'form-group';
-  if (props.wrapperClasses)
-    wrapperClasses += ' ' + props.wrapperClasses;
-  return (
-    <div className={ wrapperClasses }>
 
-      { props.label ? <label className='control-label' htmlFor={props.id}>{ props.label }</label> : '' }
+const InputWrapper = ({ wrapperClasses, id, label, children }) => (
+  <div className={classNames('form-group', wrapperClasses)}>
 
-      <div className='control-wrapper'>
-        { props.children }
-      </div>
+    { label ? <label className='control-label' htmlFor={id}>{ label }</label> : null }
 
+    <div className='control-wrapper'>
+      { children }
     </div>
-  );
-}
+
+  </div>
+);
 
 InputWrapper.propTypes = {
   id: PropTypes.string.isRequired,
-  label: PropTypes.string
-}
+  label: PropTypes.string,
+  wrapperClasses: PropTypes.string,
+  children: PropTypes.node,
+};
 
 export default InputWrapper;

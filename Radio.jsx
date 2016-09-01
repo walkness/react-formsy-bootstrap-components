@@ -1,21 +1,34 @@
 import React, { Component, PropTypes } from 'react';
 import { HOC } from 'formsy-react';
+import classNames from 'classnames';
 
-import InputWrapper from './InputWrapper';
 
 class Radio extends Component {
 
   static propTypes = {
     name: PropTypes.string.isRequired,
     label: PropTypes.string,
+    wrapperClasses: PropTypes.string,
     required: PropTypes.bool,
+    disabled: PropTypes.bool,
     options: PropTypes.array.isRequired,
+    onChange: PropTypes.func,
+    setValue: PropTypes.func.isRequired,
+    getValue: PropTypes.func.isRequired,
+    isValid: PropTypes.func.isRequired,
+    isPristine: PropTypes.func.isRequired,
+    getErrorMessage: PropTypes.func.isRequired,
+    children: PropTypes.node,
   };
 
   static defaultProps = {
-    serverError: '',
-    onChange: function(event) {},
+    onChange: () => {},
   };
+
+  constructor(props, context) {
+    super(props, context);
+    this._changeValue = this.changeValue.bind(this);
+  }
 
   changeValue(event) {
     this.props.setValue(event.currentTarget.value);
@@ -23,49 +36,35 @@ class Radio extends Component {
   }
 
   render() {
-    const { type, name, label, required, options } = this.props;
-
-    let wrapperClasses = ['radio-group'];
-    if (this.props.wrapperClasses)
-      wrapperClasses.push(this.props.wrapperClasses)
-
-    let opts = {};
-    if (this.props.required) {
-      opts['required'] = 'required';
-      wrapperClasses.push('required')
-    }
-    if (this.props.disabled) {
-      opts['disabled'] = 'disabled';
-      wrapperClasses.push('disabled');
-    }
-
-    if (!this.props.isPristine())
-      wrapperClasses.push(this.props.isValid() ? 'has-success' : 'has-error');
+    const { name, required, disabled } = this.props;
+    const inputOpts = { name, required, disabled };
 
     const value = this.props.getValue();
 
-    const radios = options.map(option => {
-
+    const radios = this.props.options.map(option => {
+      const id = `id_${name}_${option.key}`;
       return (
-        <div className={`radio`} key={ option.key }>
+        <div className='radio' key={option.key}>
 
-          <label>
+          <label htmlFor={id}>
 
             <input
-              id={ `id_${name}_${option.key}` }
+              id={id}
               type='radio'
-              name={ name }
-              value={ option.key }
-              checked={ value === option.key }
-              onChange={ this.changeValue.bind(this) }
-              { ...opts } />
+              {...inputOpts}
+              value={option.key}
+              checked={value === option.key}
+              onChange={this._changeValue}
+            />
 
               { option.value }
 
-              { option.help ? typeof option.help === 'string' ?
-                <div className='help-block' dangerouslySetInnerHTML={{__html: option.help}}/>
-              :
-                <div className='help-block'>
+              { option.help ?
+                <div
+                  className='help-block'
+                  dangerouslySetInnerHTML={typeof option.help === 'string' ? {
+                    __html: option.help } : null}
+                >
                   { option.help }
                 </div>
               : null }
@@ -77,10 +76,17 @@ class Radio extends Component {
     });
 
     return (
-      <div className={ wrapperClasses.join(' ') }>
+      <div
+        className={classNames(
+          'radio-group',
+          this.props.wrapperClasses,
+          { required, disabled },
+          { [`has-${this.props.isValid() ? 'success' : 'error'}`]: !this.props.isPristine() },
+        )}
+      >
 
         <div className='control-label radio-group-label'>
-          { label }
+          { this.props.label }
         </div>
 
         <div className='control-wrapper'>
@@ -98,4 +104,4 @@ class Radio extends Component {
   }
 }
 
-export default HOC(Radio);
+export default HOC(Radio); // eslint-disable-line new-cap

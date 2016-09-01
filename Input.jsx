@@ -1,5 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 import { HOC } from 'formsy-react';
+import classNames from 'classnames';
 
 import InputWrapper from './InputWrapper';
 
@@ -10,9 +11,9 @@ export const passwordValidation = {
   },
   validationErrors: {
     minLength: 'Must be at least 8 characters long.',
-    matchRegexp: 'Must contain at least one uppercase letter, one lowercase letter, and one number.',
+    matchRegexp: 'Must contain at least one uppercase letter, one lowercase letter, and one number.', // eslint-disable-line max-len
   },
-}
+};
 
 class Input extends Component {
 
@@ -21,13 +22,35 @@ class Input extends Component {
     name: PropTypes.string.isRequired,
     label: PropTypes.string,
     placeholder: PropTypes.string,
+    wrapperClasses: PropTypes.string,
+    replaceStatusClass: PropTypes.string,
+    required: PropTypes.bool,
+    disabled: PropTypes.bool,
+    maxLength: PropTypes.number,
+    minLength: PropTypes.number,
+    addOnBefore: PropTypes.node,
+    addOnAfter: PropTypes.node,
     onChange: PropTypes.func,
+    setValue: PropTypes.func.isRequired,
+    getValue: PropTypes.func.isRequired,
+    isPristine: PropTypes.func.isRequired,
+    isValid: PropTypes.func.isRequired,
+    getErrorMessage: PropTypes.func.isRequired,
+    showRequired: PropTypes.func.isRequired,
+    children: PropTypes.node,
   };
 
   static defaultProps = {
     type: 'text',
-    onChange: (value) => {},
+    required: false,
+    disabled: false,
+    onChange: () => {},
   };
+
+  constructor(props, context) {
+    super(props, context);
+    this._changeValue = this.changeValue.bind(this);
+  }
 
   changeValue(event) {
     const value = event.currentTarget.value;
@@ -36,53 +59,39 @@ class Input extends Component {
   }
 
   render() {
-    const { type, name, value, label, placeholder, required, maxLength, addOnBefore, addOnAfter } = this.props;
+    const { type, name, required, disabled, label, maxLength, minLength,
+      addOnBefore, addOnAfter } = this.props;
+    const id = `id_${name}`;
+    const inputOpts = { id, type, name, required, disabled, maxLength, minLength };
 
-    let wrapperClasses = []
-    if (this.props.wrapperClasses)
-      wrapperClasses.push(this.props.wrapperClasses)
-
-    let opts = {};
-    if (this.props.required) {
-      opts['required'] = 'required';
-      wrapperClasses.push('required');
-    }
-    if (this.props.disabled) {
-      opts['disabled'] = 'disabled';
-      wrapperClasses.push('disabled');
-    }
-
-    for (const opt of ['minLength', 'maxLength', 'min', 'max', 'step']) {
-      if (this.props[opt])
-        opts[opt] = this.props[opt]
-    }
-
+    let statusClass = null;
     if (this.props.replaceStatusClass) {
-      wrapperClasses.push(this.props.replaceStatusClass);
-    } else {
-      if (!this.props.isPristine())
-        wrapperClasses.push(this.props.isValid() ? 'has-success' : 'has-error');
+      statusClass = this.props.replaceStatusClass;
+    } else if (!this.props.isPristine()) {
+      statusClass = `has-${this.props.isValid() ? 'success' : 'error'}`;
     }
 
     return (
-      <InputWrapper id={`id_${name}`} label={label} wrapperClasses={ wrapperClasses.join(' ') }>
+      <InputWrapper
+        id={id}
+        label={label}
+        wrapperClasses={classNames(this.props.wrapperClasses, { required, disabled }, statusClass)}
+      >
 
-        <div className={addOnBefore || addOnAfter ? 'input-group' : ''}>
-          
+        <div className={classNames({ 'input-group': addOnBefore || addOnAfter })}>
+
           { addOnBefore ?
             <span className='input-group-addon'>{ addOnBefore }</span>
           : null }
 
-          <input 
+          <input
             className='form-control'
-            id={ `id_${name}` }
-            type={type}
-            name={name}
+            {...inputOpts}
             value={this.props.getValue() || ''}
-            placeholder={ placeholder ? placeholder : (label ? label : '') }
-            onChange={this.changeValue.bind(this)}
-            {...opts}/>
-          
+            placeholder={this.props.placeholder || label || ''}
+            onChange={this._changeValue}
+          />
+
           { addOnAfter ?
             <span className='input-group-addon'>{ addOnAfter }</span>
           : null }
@@ -91,7 +100,8 @@ class Input extends Component {
 
         <div className='feedback help-block'>
           { this.props.getErrorMessage() }
-          { this.props.showRequired() && !this.props.isPristine() ? 'This field is required.' : '' }
+          { this.props.showRequired() && !this.props.isPristine() ?
+            'This field is required.' : null }
         </div>
 
         { this.props.children }
@@ -101,4 +111,4 @@ class Input extends Component {
   }
 }
 
-export default HOC(Input);
+export default HOC(Input); // eslint-disable-line new-cap
