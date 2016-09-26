@@ -28,6 +28,8 @@ class Input extends Component {
     disabled: PropTypes.bool,
     maxLength: PropTypes.number,
     minLength: PropTypes.number,
+    max: PropTypes.number,
+    min: PropTypes.number,
     addOnBefore: PropTypes.node,
     addOnAfter: PropTypes.node,
     onChange: PropTypes.func,
@@ -59,10 +61,10 @@ class Input extends Component {
   }
 
   render() {
-    const { type, name, required, disabled, label, maxLength, minLength,
+    const { type, name, required, disabled, label, max, min, maxLength, minLength,
       addOnBefore, addOnAfter } = this.props;
     const id = `id_${name}`;
-    const inputOpts = { id, type, name, required, disabled, maxLength, minLength };
+    const inputOpts = { id, type, name, required, disabled, max, min, maxLength, minLength };
 
     let statusClass = null;
     if (this.props.replaceStatusClass) {
