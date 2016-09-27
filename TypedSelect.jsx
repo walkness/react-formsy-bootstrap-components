@@ -45,9 +45,9 @@ class TypedSelect extends Component {
     this.getOptions = this.getOptions.bind(this);
   }
 
-  changeValue(date) {
-    this.props.setValue(date);
-    this.props.onChange(date);
+  changeValue(v) {
+    this.props.setValue(v);
+    this.props.onChange(v);
   }
 
   getOptions(input) {
@@ -107,6 +107,12 @@ class TypedSelect extends Component {
       :
         <Select {...inputOpts} />
       }
+
+        <div className='feedback help-block'>
+          { this.props.getErrorMessage() }
+          { this.props.showRequired() && !this.props.isPristine() ?
+            'This field is required.' : null }
+        </div>
 
       </InputWrapper>
     );

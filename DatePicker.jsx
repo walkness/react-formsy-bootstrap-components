@@ -69,6 +69,12 @@ class DatePicker extends Component {
           {...inputOpts}
         />
 
+        <div className='feedback help-block'>
+          { this.props.getErrorMessage() }
+          { this.props.showRequired() && !this.props.isPristine() ?
+            'This field is required.' : null }
+        </div>
+
       </InputWrapper>
     );
   }
