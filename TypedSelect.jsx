@@ -1,7 +1,7 @@
 import React, { Component, PropTypes } from 'react';
 import { HOC } from 'formsy-react';
 import classNames from 'classnames';
-import Select, { Creatable, Async, AsyncCreatable } from 'react-select';
+import { default as BaseTypedSelect } from '../TypedSelect';
 
 import InputWrapper from './InputWrapper';
 
@@ -27,7 +27,7 @@ class TypedSelect extends Component {
     async: PropTypes.bool,
     creatable: PropTypes.bool,
     loadOptions: PropTypes.func,
-    minimumInput: PropTypes.number,
+    selectOptions: PropTypes.object,
   };
 
   static defaultProps = {
@@ -40,32 +40,12 @@ class TypedSelect extends Component {
 
   constructor(props, context) {
     super(props, context);
-    this.completedTerms = {};
     this.changeValue = this.changeValue.bind(this);
-    this.getOptions = this.getOptions.bind(this);
   }
 
   changeValue(v) {
     this.props.setValue(v);
     this.props.onChange(v);
-  }
-
-  getOptions(input) {
-    if (input.length < this.props.minimumInput) {
-      return Promise.resolve({ options: [] });
-    }
-    const completedTerms = Object.keys(this.completedTerms).filter(term => input.startsWith(term));
-    if (completedTerms.length > 0) {
-      const re = new RegExp(`(?:^|\\s)${input}`, 'i');
-      const options = this.completedTerms[completedTerms[0]].filter(term => term.label.match(re));
-      return Promise.resolve({ options });
-    }
-    return this.props.loadOptions(input).then(({ options, completed }) => {
-      if (completed) {
-        this.completedTerms[input.toLowerCase()] = options;
-      }
-      return { options };
-    });
   }
 
   render() {
@@ -77,7 +57,6 @@ class TypedSelect extends Component {
       name,
       required,
       disabled,
-      loadOptions: this.getOptions,
       value: this.props.getValue(),
       onChange: this.changeValue,
       ...selectOptions,
@@ -90,7 +69,6 @@ class TypedSelect extends Component {
       statusClass = `has-${this.props.isValid() ? 'success' : 'error'}`;
     }
 
-    /* eslint-disable no-nested-ternary */
     return (
       <InputWrapper
         id={id}
@@ -98,15 +76,7 @@ class TypedSelect extends Component {
         wrapperClasses={classNames(this.props.wrapperClasses, { required, disabled }, statusClass)}
       >
 
-      { this.props.async && this.props.creatable ?
-        <AsyncCreatable {...inputOpts} />
-      : this.props.async ?
-        <Async {...inputOpts} />
-      : this.props.creatable ?
-        <Creatable {...inputOpts} />
-      :
-        <Select {...inputOpts} />
-      }
+        <BaseTypedSelect {...inputOpts} />
 
         <div className='feedback help-block'>
           { this.props.getErrorMessage() }
@@ -116,7 +86,6 @@ class TypedSelect extends Component {
 
       </InputWrapper>
     );
-    /* eslint-enable no-nested-ternary */
   }
 }
 
