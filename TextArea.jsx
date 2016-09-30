@@ -17,7 +17,7 @@ class TextArea extends Component {
     disabled: PropTypes.bool,
     cols: PropTypes.number,
     rows: PropTypes.number,
-    onChange: PropTypes.func.isRequired,
+    onChange: PropTypes.func,
     setValue: PropTypes.func.isRequired,
     getValue: PropTypes.func.isRequired,
     isPristine: PropTypes.func.isRequired,

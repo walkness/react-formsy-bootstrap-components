@@ -27,6 +27,7 @@ class DatePicker extends Component {
     showRequired: PropTypes.func.isRequired,
     selected: PropTypes.object,
     dateFormat: PropTypes.string,
+    datePickerProps: PropTypes.object,
   };
 
   static defaultProps = {
@@ -49,9 +50,9 @@ class DatePicker extends Component {
   }
 
   render() {
-    const { type, name, required, disabled, label } = this.props;
+    const { type, name, required, disabled, label, datePickerProps } = this.props;
     const id = `id_${name}`;
-    const inputOpts = { id, type, name, required, disabled };
+    const inputOpts = { id, type, name, required, disabled, ...datePickerProps };
 
     let statusClass = null;
     if (this.props.replaceStatusClass) {
