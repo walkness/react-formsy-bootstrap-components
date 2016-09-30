@@ -2,6 +2,7 @@ import React, { Component, PropTypes } from 'react';
 import { HOC } from 'formsy-react';
 import classNames from 'classnames';
 import { default as BaseDatePicker } from 'react-datepicker';
+import moment from 'moment';
 
 import InputWrapper from './InputWrapper';
 
@@ -24,6 +25,7 @@ class DatePicker extends Component {
     isValid: PropTypes.func.isRequired,
     getErrorMessage: PropTypes.func.isRequired,
     showRequired: PropTypes.func.isRequired,
+    selected: PropTypes.object,
   };
 
   static defaultProps = {
@@ -39,8 +41,9 @@ class DatePicker extends Component {
   }
 
   changeValue(date) {
-    this.props.setValue(date);
-    this.props.onChange(date);
+    const formatted = date.format();
+    this.props.setValue(formatted);
+    this.props.onChange(formatted);
   }
 
   render() {
@@ -55,6 +58,8 @@ class DatePicker extends Component {
       statusClass = `has-${this.props.isValid() ? 'success' : 'error'}`;
     }
 
+    const value = this.props.getValue();
+
     return (
       <InputWrapper
         id={id}
@@ -64,7 +69,7 @@ class DatePicker extends Component {
 
         <BaseDatePicker
           className='form-control'
-          selected={this.props.getValue()}
+          selected={value ? moment(value) : null}
           onChange={this.changeValue}
           {...inputOpts}
         />
