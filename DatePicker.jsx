@@ -26,6 +26,7 @@ class DatePicker extends Component {
     getErrorMessage: PropTypes.func.isRequired,
     showRequired: PropTypes.func.isRequired,
     selected: PropTypes.object,
+    dateFormat: PropTypes.string,
   };
 
   static defaultProps = {
@@ -33,6 +34,7 @@ class DatePicker extends Component {
     required: false,
     disabled: false,
     onChange: () => {},
+    dateFormat: 'YYYY-MM-DD',
   };
 
   constructor(props, context) {
@@ -41,7 +43,7 @@ class DatePicker extends Component {
   }
 
   changeValue(date) {
-    const formatted = date.format();
+    const formatted = date.format(this.props.dateFormat);
     this.props.setValue(formatted);
     this.props.onChange(formatted);
   }
