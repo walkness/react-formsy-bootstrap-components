@@ -44,7 +44,7 @@ class DatePicker extends Component {
   }
 
   changeValue(date) {
-    const formatted = date.format(this.props.dateFormat);
+    const formatted = date && date.format(this.props.dateFormat);
     this.props.setValue(formatted);
     this.props.onChange(formatted);
   }
@@ -74,6 +74,7 @@ class DatePicker extends Component {
           className='form-control'
           selected={value ? moment(value) : null}
           onChange={this.changeValue}
+          placeholderText={this.props.placeholder || label}
           {...inputOpts}
         />
 
