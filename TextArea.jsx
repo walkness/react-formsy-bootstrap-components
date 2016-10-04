@@ -25,6 +25,7 @@ class TextArea extends Component {
     getErrorMessage: PropTypes.func.isRequired,
     showRequired: PropTypes.func.isRequired,
     children: PropTypes.node,
+    beforeField: PropTypes.node,
   };
 
   static defaultProps = {
@@ -57,6 +58,8 @@ class TextArea extends Component {
           },
         )}
       >
+
+        { this.props.beforeField }
 
         <textarea
           className='form-control'
