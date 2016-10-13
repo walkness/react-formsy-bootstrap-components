@@ -24,6 +24,7 @@ class Input extends Component {
     placeholder: PropTypes.string,
     wrapperClasses: PropTypes.string,
     replaceStatusClass: PropTypes.string,
+    className: PropTypes.string,
     required: PropTypes.bool,
     disabled: PropTypes.bool,
     maxLength: PropTypes.number,
@@ -62,23 +63,18 @@ class Input extends Component {
   }
 
   render() {
+    const { className, ...wrapperProps } = this.props;
     const { type, name, required, disabled, label, step, max, min, maxLength, minLength,
       addOnBefore, addOnAfter } = this.props;
     const id = `id_${name}`;
     const inputOpts = { id, type, name, required, disabled, step, max, min, maxLength, minLength };
 
-    let statusClass = null;
-    if (this.props.replaceStatusClass) {
-      statusClass = this.props.replaceStatusClass;
-    } else if (!this.props.isPristine()) {
-      statusClass = `has-${this.props.isValid() ? 'success' : 'error'}`;
-    }
-
     return (
       <InputWrapper
+        {...wrapperProps}
+        className={this.props.wrapperClasses}
         id={id}
         label={label}
-        wrapperClasses={classNames(this.props.wrapperClasses, { required, disabled }, statusClass)}
       >
 
         <div className={classNames({ 'input-group': addOnBefore || addOnAfter })}>
@@ -88,7 +84,7 @@ class Input extends Component {
           : null }
 
           <input
-            className='form-control'
+            className={classNames('form-control', className)}
             {...inputOpts}
             value={this.props.getValue() || ''}
             placeholder={this.props.placeholder || label || ''}

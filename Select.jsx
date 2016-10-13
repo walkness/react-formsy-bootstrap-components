@@ -14,6 +14,7 @@ class Select extends Component {
     disabled: PropTypes.bool,
     options: PropTypes.array.isRequired,
     wrapperClasses: PropTypes.string,
+    className: PropTypes.string,
     onChange: PropTypes.func,
     setValue: PropTypes.func.isRequired,
     getValue: PropTypes.func.isRequired,
@@ -38,23 +39,21 @@ class Select extends Component {
   }
 
   render() {
+    const { className, wrapperClasses, ...wrapperProps } = this.props;
     const { name, required, disabled } = this.props;
     const id = `id_${name}`;
     const inputOpts = { id, name, required, disabled };
 
     return (
       <InputWrapper
+        {...wrapperProps}
+        className={wrapperClasses}
         id={id}
         label={this.props.label}
-        wrapperClasses={classNames(
-          this.props.wrapperClasses,
-          { required, disabled },
-          { [`has-${this.props.isValid() ? 'success' : 'error'}`]: !this.props.isPristine() }
-        )}
       >
 
         <select
-          className='form-control'
+          className={classNames('form-control', className)}
           {...inputOpts}
           value={this.props.getValue()}
           onChange={this._changeValue}

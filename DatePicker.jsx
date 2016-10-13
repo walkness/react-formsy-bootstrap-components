@@ -15,6 +15,7 @@ class DatePicker extends Component {
     label: PropTypes.string,
     placeholder: PropTypes.string,
     wrapperClasses: PropTypes.string,
+    className: PropTypes.string,
     replaceStatusClass: PropTypes.string,
     required: PropTypes.bool,
     disabled: PropTypes.bool,
@@ -50,29 +51,24 @@ class DatePicker extends Component {
   }
 
   render() {
+    const { className, wrapperClasses, ...wrapperProps } = this.props;
     const { type, name, required, disabled, label, datePickerProps } = this.props;
     const id = `id_${name}`;
     const inputOpts = { id, type, name, required, disabled, ...datePickerProps };
-
-    let statusClass = null;
-    if (this.props.replaceStatusClass) {
-      statusClass = this.props.replaceStatusClass;
-    } else if (!this.props.isPristine()) {
-      statusClass = `has-${this.props.isValid() ? 'success' : 'error'}`;
-    }
 
     const value = this.props.getValue();
 
     return (
       <InputWrapper
+        {...wrapperProps}
         id={id}
         label={label}
-        wrapperClasses={classNames(this.props.wrapperClasses, { required, disabled }, statusClass)}
+        className={wrapperClasses}
       >
 
         <BaseDatePicker
-          className='form-control'
-          selected={value ? moment(value) : null}
+          className={classNames('form-control', className)}
+          selected={value && moment(value)}
           onChange={this.changeValue}
           placeholderText={this.props.placeholder || label}
           {...inputOpts}

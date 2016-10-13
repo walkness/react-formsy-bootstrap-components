@@ -14,6 +14,7 @@ class TypedSelect extends Component {
     label: PropTypes.string,
     placeholder: PropTypes.string,
     wrapperClasses: PropTypes.string,
+    className: PropTypes.string,
     replaceStatusClass: PropTypes.string,
     required: PropTypes.bool,
     disabled: PropTypes.bool,
@@ -49,6 +50,7 @@ class TypedSelect extends Component {
   }
 
   render() {
+    const { className, wrapperClasses, ...wrapperProps } = this.props;
     const { type, name, required, disabled, label, selectOptions } = this.props;
     const id = `id_${name}`;
     const inputOpts = {
@@ -59,6 +61,7 @@ class TypedSelect extends Component {
       disabled,
       value: this.props.getValue(),
       onChange: this.changeValue,
+      className,
       ...selectOptions,
     };
 
@@ -71,6 +74,8 @@ class TypedSelect extends Component {
 
     return (
       <InputWrapper
+        {...wrapperProps}
+        className={wrapperClasses}
         id={id}
         label={label}
         wrapperClasses={classNames(this.props.wrapperClasses, { required, disabled }, statusClass)}

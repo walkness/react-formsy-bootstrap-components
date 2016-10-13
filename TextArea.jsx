@@ -13,6 +13,7 @@ class TextArea extends Component {
     label: PropTypes.string,
     placeholder: PropTypes.string,
     wrapperClasses: PropTypes.string,
+    className: PropTypes.string,
     required: PropTypes.bool,
     disabled: PropTypes.bool,
     cols: PropTypes.number,
@@ -42,27 +43,23 @@ class TextArea extends Component {
   }
 
   render() {
+    const { className, wrapperClasses, ...wrapperProps } = this.props;
     const { name, label, required, disabled, cols, rows } = this.props;
     const id = `id_${name}`;
     const inputOpts = { id, name, required, disabled, cols, rows };
 
     return (
       <InputWrapper
+        {...wrapperProps}
+        className={wrapperClasses}
         id={id}
         label={label}
-        wrapperClasses={classNames(
-          this.props.wrapperClasses, {
-            required,
-            disabled,
-            [`has-${this.props.isValid() ? 'success' : 'error'}`]: !this.props.isPristine(),
-          },
-        )}
       >
 
         { this.props.beforeField }
 
         <textarea
-          className='form-control'
+          className={classNames('form-control', className)}
           {...inputOpts}
           value={this.props.getValue() || ''}
           placeholder={this.props.placeholder || label || ''}
