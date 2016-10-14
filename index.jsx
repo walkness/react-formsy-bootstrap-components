@@ -9,6 +9,7 @@ import SubmitButton from './SubmitButton';
 import TextArea from './TextArea';
 import DatePicker from './DatePicker';
 import TypedSelect from './TypedSelect';
+import SelectMultipleCheckbox from './SelectMultipleCheckbox';
 
 export {
   Address,
@@ -26,4 +27,5 @@ export {
   TextArea,
   DatePicker,
   TypedSelect,
+  SelectMultipleCheckbox,
 };

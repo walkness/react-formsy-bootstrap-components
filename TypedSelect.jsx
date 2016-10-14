@@ -45,7 +45,7 @@ class TypedSelect extends Component {
   }
 
   changeValue(v) {
-    this.props.setValue(v);
+    this.props.setValue(v || '');
     this.props.onChange(v);
   }
 
@@ -65,20 +65,12 @@ class TypedSelect extends Component {
       ...selectOptions,
     };
 
-    let statusClass = null;
-    if (this.props.replaceStatusClass) {
-      statusClass = this.props.replaceStatusClass;
-    } else if (!this.props.isPristine()) {
-      statusClass = `has-${this.props.isValid() ? 'success' : 'error'}`;
-    }
-
     return (
       <InputWrapper
         {...wrapperProps}
         className={wrapperClasses}
         id={id}
         label={label}
-        wrapperClasses={classNames(this.props.wrapperClasses, { required, disabled }, statusClass)}
       >
 
         <BaseTypedSelect {...inputOpts} />

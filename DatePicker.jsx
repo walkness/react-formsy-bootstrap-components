@@ -46,7 +46,7 @@ class DatePicker extends Component {
 
   changeValue(date) {
     const formatted = date && date.format(this.props.dateFormat);
-    this.props.setValue(formatted);
+    this.props.setValue(formatted || '');
     this.props.onChange(formatted);
   }
 
