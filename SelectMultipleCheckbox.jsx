@@ -1,12 +1,9 @@
 import React, { Component, PropTypes } from 'react';
-import Formsy, { HOC } from 'formsy-react';
+import { HOC } from 'formsy-react';
 import classNames from 'classnames';
 
 import InputWrapper from './InputWrapper';
 
-Formsy.addValidationRule('minItems', (values, value, min) => (
-  value && value.length && value.length >= min
-));
 
 class SelectMultipleCheckbox extends Component {
 
@@ -52,8 +49,8 @@ class SelectMultipleCheckbox extends Component {
 
   render() {
     const { className, wrapperClasses, ...wrapperProps } = this.props;
-    const { name, required, disabled } = this.props;
-    const inputOpts = { name, required, disabled };
+    const { name, disabled } = this.props;
+    const inputOpts = { name, disabled };
 
     const value = this.props.getValue();
 
@@ -77,7 +74,7 @@ class SelectMultipleCheckbox extends Component {
                 {...inputOpts}
                 className={classNames('custom-control-input', className)}
                 value={option.key}
-                checked={value.indexOf(option.key) !== -1}
+                checked={value && value.indexOf(option.key) !== -1}
                 onChange={this._changeValue}
               />
 
