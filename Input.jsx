@@ -42,6 +42,7 @@ class Input extends Component {
     getErrorMessage: PropTypes.func.isRequired,
     showRequired: PropTypes.func.isRequired,
     children: PropTypes.node,
+    inputRef: PropTypes.func,
   };
 
   static defaultProps = {
@@ -49,6 +50,7 @@ class Input extends Component {
     required: false,
     disabled: false,
     onChange: () => {},
+    inputRef: () => {},
   };
 
   constructor(props, context) {
@@ -84,6 +86,7 @@ class Input extends Component {
           : null }
 
           <input
+            ref={this.props.inputRef}
             className={classNames('form-control', className)}
             {...inputOpts}
             value={this.props.getValue() || ''}
