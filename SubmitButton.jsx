@@ -6,7 +6,7 @@ const SubmitButton = (props) => {
   const { isSubmitting } = props;
   return (
     <button
-      type='submit'
+      type={props.type}
       className={classNames(
         'btn',
         `btn${props.outline ? '-outline' : ''}-${props.style}`,
@@ -34,9 +34,11 @@ SubmitButton.propTypes = {
   className: PropTypes.string,
   onClick: PropTypes.func,
   children: PropTypes.node,
+  type: PropTypes.string,
 };
 
 SubmitButton.defaultProps = {
+  type: 'submit',
   style: 'primary',
   outline: false,
   enabled: true,
