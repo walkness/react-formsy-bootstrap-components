@@ -58,7 +58,7 @@ class SelectMultipleCheckbox extends Component {
       <InputWrapper
         {...wrapperProps}
         id={`id_${name}`}
-        className={wrapperClasses}
+        className={classNames('multiple-checkbox', wrapperClasses)}
       >
 
       { this.props.options.map(option => {
