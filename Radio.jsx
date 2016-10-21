@@ -19,10 +19,16 @@ class Radio extends Component {
     isPristine: PropTypes.func.isRequired,
     getErrorMessage: PropTypes.func.isRequired,
     children: PropTypes.node,
+    asButtons: PropTypes.bool,
+    btnType: PropTypes.oneOfType([
+      PropTypes.object,
+      PropTypes.oneOf(['primary', 'secondary', 'success', 'warning', 'danger', 'info']),
+    ]),
   };
 
   static defaultProps = {
     onChange: () => {},
+    btnType: 'primary',
   };
 
   constructor(props, context) {
@@ -36,42 +42,60 @@ class Radio extends Component {
   }
 
   render() {
-    const { name, required, disabled } = this.props;
+    const { name, required, disabled, asButtons, btnType } = this.props;
     const inputOpts = { name, required, disabled };
 
     const value = this.props.getValue();
 
     const radios = this.props.options.map(option => {
       const id = `id_${name}_${option.key}`;
+      const checked = value === option.key;
+      let type = btnType;
+      if (option.btnType) {
+        type = option.btnType;
+      } else if (btnType.constructor === {}.constructor) {
+        type = btnType[value] || 'secondary';
+      }
       return (
-        <div className='radio' key={option.key}>
+        <label
+          key={id}
+          htmlFor={id}
+          className={classNames({
+            [`btn btn-${type}`]: asButtons,
+            'custom-control custom-radio': !asButtons,
+            active: checked,
+          })}
+        >
 
-          <label htmlFor={id}>
+          <input
+            id={id}
+            type='radio'
+            {...inputOpts}
+            value={option.key}
+            checked={checked}
+            onChange={this._changeValue}
+            className={asButtons ? null : 'custom-control-input'}
+          />
 
-            <input
-              id={id}
-              type='radio'
-              {...inputOpts}
-              value={option.key}
-              checked={value === option.key}
-              onChange={this._changeValue}
-            />
+        { !asButtons ?
+          <span className='custom-control-indicator' />
+        : null }
 
-              { option.value }
+        { !asButtons ?
+          <span className='custom-control-description'>{ option.value }</span>
+        : option.value }
 
-              { option.help ?
-                <div
-                  className='help-block'
-                  dangerouslySetInnerHTML={typeof option.help === 'string' ? {
-                    __html: option.help } : null}
-                >
-                  { option.help }
-                </div>
-              : null }
+        { option.help ?
+          <div
+            className='help-block'
+            dangerouslySetInnerHTML={typeof option.help === 'string' ? {
+              __html: option.help } : null}
+          >
+            { option.help }
+          </div>
+        : null }
 
-          </label>
-
-        </div>
+        </label>
       );
     });
 
@@ -89,15 +113,18 @@ class Radio extends Component {
           { this.props.label }
         </div>
 
-        <div className='control-wrapper'>
+        <div
+          className={classNames('control-wrapper', { 'btn-group': asButtons })}
+          data-toggle={asButtons ? 'buttons' : null}
+        >
           { radios }
-
-          <div className='feedback'>
-            { this.props.getErrorMessage() }
-          </div>
-
-          { this.props.children }
         </div>
+
+        <div className='feedback'>
+          { this.props.getErrorMessage() }
+        </div>
+
+        { this.props.children }
 
       </div>
     );
