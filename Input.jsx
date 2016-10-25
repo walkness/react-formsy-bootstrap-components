@@ -43,6 +43,7 @@ class Input extends Component {
     showRequired: PropTypes.func.isRequired,
     children: PropTypes.node,
     inputRef: PropTypes.func,
+    prepValue: PropTypes.func,
   };
 
   static defaultProps = {
@@ -51,6 +52,7 @@ class Input extends Component {
     disabled: false,
     onChange: () => {},
     inputRef: () => {},
+    prepValue: v => v,
   };
 
   constructor(props, context) {
@@ -59,7 +61,7 @@ class Input extends Component {
   }
 
   changeValue(event) {
-    const value = event.currentTarget.value;
+    const value = this.props.prepValue(event.currentTarget.value);
     this.props.setValue(value);
     this.props.onChange(value);
   }
