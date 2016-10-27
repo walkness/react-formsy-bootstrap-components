@@ -23,6 +23,12 @@ const InputWrapper = (props) => {
 
       { label ? <label className='control-label' htmlFor={props.id}>{ label }</label> : null }
 
+    { props.helpText ?
+      <div className='help-text'>
+        { props.helpText }
+      </div>
+    : null }
+
       <div className='control-wrapper'>
         { props.children }
       </div>
@@ -36,6 +42,7 @@ const InputWrapper = (props) => {
 InputWrapper.propTypes = {
   id: PropTypes.string.isRequired,
   label: PropTypes.string,
+  helpText: PropTypes.node,
   className: PropTypes.string,
   children: PropTypes.node,
   afterControl: PropTypes.node,
