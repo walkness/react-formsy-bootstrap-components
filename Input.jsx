@@ -33,6 +33,7 @@ export class Input extends Component {
     max: PropTypes.number,
     min: PropTypes.number,
     addOnBefore: PropTypes.node,
+    btnBefore: PropTypes.element,
     addOnAfter: PropTypes.node,
     onChange: PropTypes.func,
     setValue: PropTypes.func.isRequired,
@@ -53,7 +54,7 @@ export class Input extends Component {
     getErrorMessage: () => null,
     showRequired: () => null,
     isPristine: () => null,
-    isValid: () => null,
+    isValid: () => true,
     onChange: () => {},
     inputRef: () => {},
     prepValue: v => v,
@@ -73,7 +74,7 @@ export class Input extends Component {
   render() {
     const { className, ...wrapperProps } = this.props;
     const { type, name, required, disabled, label, step, max, min, maxLength, minLength,
-      addOnBefore, addOnAfter } = this.props;
+      addOnBefore, addOnAfter, btnBefore } = this.props;
     const id = `id_${name}`;
     const inputOpts = { id, type, name, required, disabled, step, max, min, maxLength, minLength };
 
@@ -85,11 +86,13 @@ export class Input extends Component {
         label={label}
       >
 
-        <div className={classNames({ 'input-group': addOnBefore || addOnAfter })}>
+        <div className={classNames({ 'input-group': addOnBefore || addOnAfter || btnBefore })}>
 
           { addOnBefore ?
             <span className='input-group-addon'>{ addOnBefore }</span>
           : null }
+
+          { btnBefore }
 
           <input
             ref={this.props.inputRef}
