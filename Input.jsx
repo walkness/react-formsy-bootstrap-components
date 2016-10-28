@@ -15,7 +15,7 @@ export const passwordValidation = {
   },
 };
 
-class Input extends Component {
+export class Input extends Component {
 
   static propTypes = {
     type: PropTypes.string,
@@ -50,6 +50,9 @@ class Input extends Component {
     type: 'text',
     required: false,
     disabled: false,
+    getErrorMessage: () => null,
+    showRequired: () => null,
+    isPristine: () => null,
     onChange: () => {},
     inputRef: () => {},
     prepValue: v => v,
