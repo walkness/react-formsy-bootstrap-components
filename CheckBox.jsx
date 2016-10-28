@@ -2,7 +2,7 @@ import React, { Component, PropTypes } from 'react';
 import { HOC } from 'formsy-react';
 import classNames from 'classnames';
 
-class Checkbox extends Component {
+export class Checkbox extends Component {
 
   static propTypes = {
     name: PropTypes.string.isRequired,
@@ -20,7 +20,11 @@ class Checkbox extends Component {
 
   static defaultProps = {
     wrapperClasses: '',
-    onChange: () => {},
+    getValue: () => null,
+    setValue: () => null,
+    isValid: () => null,
+    isPristine: () => null,
+    onChange: () => null,
     required: false,
     disabled: false,
   };
