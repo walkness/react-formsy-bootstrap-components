@@ -29,6 +29,7 @@ class TypedSelect extends Component {
     creatable: PropTypes.bool,
     loadOptions: PropTypes.func,
     selectOptions: PropTypes.object,
+    prepValue: PropTypes.func,
   };
 
   static defaultProps = {
@@ -37,6 +38,7 @@ class TypedSelect extends Component {
     disabled: false,
     onChange: () => {},
     minimumInput: 0,
+    prepValue: v => v,
   };
 
   constructor(props, context) {
@@ -45,8 +47,9 @@ class TypedSelect extends Component {
   }
 
   changeValue(v) {
-    this.props.setValue(v || '');
-    this.props.onChange(v);
+    const value = this.props.prepValue(v);
+    this.props.setValue(value);
+    this.props.onChange(value);
   }
 
   render() {
