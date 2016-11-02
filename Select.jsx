@@ -34,8 +34,10 @@ class Select extends Component {
   }
 
   changeValue(event) {
-    this.props.setValue(event.currentTarget.value);
-    this.props.onChange(event.currentTarget.value);
+    let value = event.currentTarget.value;
+    if (value === 'null') value = null;
+    this.props.setValue(value);
+    this.props.onChange(value);
   }
 
   render() {
@@ -59,9 +61,13 @@ class Select extends Component {
           onChange={this._changeValue}
         >
 
-          { this.props.options.map(option => (
-            <option key={option.key} value={option.key}>{ option.value }</option>
-          )) }
+          { this.props.options.map(option => {
+            let value = option.key;
+            if (option.key === null) {
+              value = 'null';
+            }
+            return <option key={value} value={value}>{ option.value }</option>;
+          }) }
 
         </select>
 
