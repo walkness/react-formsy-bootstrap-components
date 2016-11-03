@@ -5,7 +5,7 @@ import classNames from 'classnames';
 import InputWrapper from './InputWrapper';
 
 
-class Select extends Component {
+export class Select extends Component {
 
   static propTypes = {
     name: PropTypes.string.isRequired,
@@ -18,14 +18,17 @@ class Select extends Component {
     onChange: PropTypes.func,
     setValue: PropTypes.func.isRequired,
     getValue: PropTypes.func.isRequired,
-    isPristine: PropTypes.func.isRequired,
-    isValid: PropTypes.func.isRequired,
-    getErrorMessage: PropTypes.func.isRequired,
+    isPristine: PropTypes.func,
+    isValid: PropTypes.func,
+    getErrorMessage: PropTypes.func,
     children: PropTypes.node,
   };
 
   static defaultProps = {
     onChange: () => {},
+    isPristine: () => null,
+    isValid: () => null,
+    getErrorMessage: () => null,
   };
 
   constructor(props, context) {
