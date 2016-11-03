@@ -27,7 +27,7 @@ export class Select extends Component {
   static defaultProps = {
     onChange: () => {},
     isPristine: () => null,
-    isValid: () => null,
+    isValid: () => true,
     getErrorMessage: () => null,
   };
 
