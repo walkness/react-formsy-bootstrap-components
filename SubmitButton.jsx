@@ -11,7 +11,7 @@ const SubmitButton = (props) => {
         'btn',
         `btn${props.outline ? '-outline' : ''}-${props.style}`,
         props.className,
-        { loading: isSubmitting },
+        { 'is-loading': isSubmitting },
       )}
       disabled={!props.enabled || isSubmitting}
       onClick={props.onClick}
