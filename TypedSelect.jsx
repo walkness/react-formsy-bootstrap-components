@@ -1,6 +1,5 @@
 import React, { Component, PropTypes } from 'react';
 import { HOC } from 'formsy-react';
-import classNames from 'classnames';
 import { default as BaseTypedSelect } from '../TypedSelect';
 
 import InputWrapper from './InputWrapper';
@@ -48,7 +47,7 @@ class TypedSelect extends Component {
 
   changeValue(v) {
     const value = this.props.prepValue(v);
-    this.props.setValue(value);
+    this.props.setValue(value || '');
     this.props.onChange(value);
   }
 
