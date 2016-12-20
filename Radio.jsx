@@ -57,17 +57,18 @@ class Radio extends Component {
               onChange={this._changeValue}
             />
 
-              { option.value }
+            { option.value }
 
-              { option.help ?
-                <div
-                  className='help-block'
-                  dangerouslySetInnerHTML={typeof option.help === 'string' ? {
-                    __html: option.help } : null}
-                >
-                  { option.help }
-                </div>
-              : null }
+            { typeof option.help === 'string' ?
+              <div
+                className='help-block'
+                dangerouslySetInnerHTML={{ __html: option.help }}
+              />
+            :
+              <div className='help-block'>
+                { option.help }
+              </div>
+            }
 
           </label>
 
