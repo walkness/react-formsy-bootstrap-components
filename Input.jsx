@@ -22,6 +22,7 @@ class Input extends Component {
     name: PropTypes.string.isRequired,
     label: PropTypes.string,
     placeholder: PropTypes.string,
+    className: PropTypes.string,
     wrapperClasses: PropTypes.string,
     replaceStatusClass: PropTypes.string,
     required: PropTypes.bool,
@@ -40,6 +41,8 @@ class Input extends Component {
     getErrorMessage: PropTypes.func.isRequired,
     showRequired: PropTypes.func.isRequired,
     children: PropTypes.node,
+    large: PropTypes.bool,
+    small: PropTypes.bool,
   };
 
   static defaultProps = {
@@ -62,7 +65,7 @@ class Input extends Component {
 
   render() {
     const { type, name, required, disabled, label, max, min, maxLength, minLength,
-      addOnBefore, addOnAfter } = this.props;
+      addOnBefore, addOnAfter, className, large, small } = this.props;
     const id = `id_${name}`;
     const inputOpts = { id, type, name, required, disabled, max, min, maxLength, minLength };
 
@@ -87,7 +90,10 @@ class Input extends Component {
           : null }
 
           <input
-            className='form-control'
+            className={classNames('form-control', className, {
+              'form-control-lg': large,
+              'form-control-sm': small,
+            })}
             {...inputOpts}
             value={this.props.getValue() || ''}
             placeholder={this.props.placeholder || label || ''}
