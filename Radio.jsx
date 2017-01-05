@@ -85,14 +85,16 @@ class Radio extends Component {
           <span className='custom-control-description'>{ option.value }</span>
         : option.value }
 
-        { option.help ?
+        { option.help && typeof option.help === 'string' ?
           <div
             className='help-block'
             dangerouslySetInnerHTML={typeof option.help === 'string' ? {
               __html: option.help } : null}
-          >
-            { option.help }
-          </div>
+          />
+        : null }
+
+        { option.help && typeof option.help !== 'string' ?
+          <div className='help-block'>{ option.help }</div>
         : null }
 
         </label>
