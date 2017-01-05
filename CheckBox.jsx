@@ -2,7 +2,7 @@ import React, { Component, PropTypes } from 'react';
 import { HOC } from 'formsy-react';
 import classNames from 'classnames';
 
-class Checkbox extends Component {
+export class Checkbox extends Component {
 
   static propTypes = {
     name: PropTypes.string.isRequired,
@@ -20,7 +20,11 @@ class Checkbox extends Component {
 
   static defaultProps = {
     wrapperClasses: '',
-    onChange: () => {},
+    getValue: () => null,
+    setValue: () => null,
+    isValid: () => null,
+    isPristine: () => null,
+    onChange: () => null,
     required: false,
     disabled: false,
   };
@@ -36,31 +40,35 @@ class Checkbox extends Component {
   }
 
   render() {
-    const { name, label, required, disabled } = this.props;
+    const { name, label, required, disabled, isPristine, isValid } = this.props;
     const id = `id_${name}`;
     const inputOpts = { id, name, required, disabled };
 
     return (
       <div
         className={classNames(
-          'checkbox',
+          'form-check',
           this.props.wrapperClasses,
           { required },
           { disabled },
-          { [`has-${this.props.isValid() ? 'success' : 'error'}`]: !this.props.isPristine() },
+          { 'has-success': !isPristine() && isValid() && this.props.showSuccess },
+          { 'has-error': !isPristine() && !isValid() },
         )}
       >
 
-        <label htmlFor={id}>
+        <label htmlFor={id} className='custom-control custom-checkbox'>
 
           <input
             type='checkbox'
             {...inputOpts}
+            className='custom-control-input'
             onChange={this._changeValue}
             checked={this.props.getValue()}
           />
 
-          { label }
+          <span className='custom-control-indicator' />
+
+          <span className='custom-control-description'>{ label }</span>
 
         </label>
 

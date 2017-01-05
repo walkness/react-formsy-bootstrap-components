@@ -1,23 +1,24 @@
 import React, { Component, PropTypes } from 'react';
 import { HOC } from 'formsy-react';
 import classNames from 'classnames';
+import { default as BaseDatePicker } from 'react-datepicker';
+import moment from 'moment';
 
 import InputWrapper from './InputWrapper';
 
 
-class TextArea extends Component {
+class DatePicker extends Component {
 
   static propTypes = {
+    type: PropTypes.string,
     name: PropTypes.string.isRequired,
-    value: PropTypes.string,
     label: PropTypes.string,
     placeholder: PropTypes.string,
     wrapperClasses: PropTypes.string,
     className: PropTypes.string,
+    replaceStatusClass: PropTypes.string,
     required: PropTypes.bool,
     disabled: PropTypes.bool,
-    cols: PropTypes.number,
-    rows: PropTypes.number,
     onChange: PropTypes.func,
     setValue: PropTypes.func.isRequired,
     getValue: PropTypes.func.isRequired,
@@ -25,52 +26,58 @@ class TextArea extends Component {
     isValid: PropTypes.func.isRequired,
     getErrorMessage: PropTypes.func.isRequired,
     showRequired: PropTypes.func.isRequired,
-    children: PropTypes.node,
-    beforeField: PropTypes.node,
+    selected: PropTypes.object,
+    dateFormat: PropTypes.string,
+    datePickerProps: PropTypes.object,
   };
 
   static defaultProps = {
     type: 'text',
+    required: false,
+    disabled: false,
+    onChange: () => {},
+    dateFormat: 'YYYY-MM-DD',
   };
 
   constructor(props, context) {
     super(props, context);
-    this._changeValue = this.changeValue.bind(this);
+    this.changeValue = this.changeValue.bind(this);
   }
 
-  changeValue(event) {
-    this.props.setValue(event.currentTarget.value);
+  changeValue(date) {
+    const formatted = date && date.format(this.props.dateFormat);
+    this.props.setValue(formatted || '');
+    this.props.onChange(formatted);
   }
 
   render() {
     const { className, wrapperClasses, ...wrapperProps } = this.props;
-    const { name, label, required, disabled, cols, rows } = this.props;
+    const { type, name, required, disabled, label, datePickerProps } = this.props;
     const id = `id_${name}`;
-    const inputOpts = { id, name, required, disabled, cols, rows };
+    const inputOpts = { id, type, name, required, disabled, ...datePickerProps };
+
+    const value = this.props.getValue();
 
     return (
       <InputWrapper
         {...wrapperProps}
-        className={wrapperClasses}
         id={id}
         label={label}
+        className={wrapperClasses}
       >
 
-        { this.props.beforeField }
-
-        <textarea
+        <BaseDatePicker
           className={classNames('form-control', className)}
+          selected={value && moment(value)}
+          onChange={this.changeValue}
+          placeholderText={this.props.placeholder || label}
           {...inputOpts}
-          value={this.props.getValue() || ''}
-          placeholder={this.props.placeholder || label || ''}
-          onChange={this._changeValue}
         />
-
-        { this.props.children }
 
         <div className='feedback help-block'>
           { this.props.getErrorMessage() }
-          { this.props.showRequired() && !this.props.isPristine() ? 'This field is required.' : '' }
+          { this.props.showRequired() && !this.props.isPristine() ?
+            'This field is required.' : null }
         </div>
 
       </InputWrapper>
@@ -78,4 +85,4 @@ class TextArea extends Component {
   }
 }
 
-export default HOC(TextArea); // eslint-disable-line new-cap
+export default HOC(DatePicker); // eslint-disable-line new-cap

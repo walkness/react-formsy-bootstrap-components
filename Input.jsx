@@ -15,7 +15,7 @@ export const passwordValidation = {
   },
 };
 
-class Input extends Component {
+export class Input extends Component {
 
   static propTypes = {
     type: PropTypes.string,
@@ -29,27 +29,37 @@ class Input extends Component {
     disabled: PropTypes.bool,
     maxLength: PropTypes.number,
     minLength: PropTypes.number,
+    step: PropTypes.number,
     max: PropTypes.number,
     min: PropTypes.number,
     addOnBefore: PropTypes.node,
+    btnBefore: PropTypes.element,
     addOnAfter: PropTypes.node,
     onChange: PropTypes.func,
     setValue: PropTypes.func.isRequired,
     getValue: PropTypes.func.isRequired,
-    isPristine: PropTypes.func.isRequired,
-    isValid: PropTypes.func.isRequired,
-    getErrorMessage: PropTypes.func.isRequired,
-    showRequired: PropTypes.func.isRequired,
+    isPristine: PropTypes.func,
+    isValid: PropTypes.func,
+    getErrorMessage: PropTypes.func,
+    showRequired: PropTypes.func,
     children: PropTypes.node,
     large: PropTypes.bool,
     small: PropTypes.bool,
+    inputRef: PropTypes.func,
+    prepValue: PropTypes.func,
   };
 
   static defaultProps = {
     type: 'text',
     required: false,
     disabled: false,
+    getErrorMessage: () => null,
+    showRequired: () => null,
+    isPristine: () => null,
+    isValid: () => true,
     onChange: () => {},
+    inputRef: () => {},
+    prepValue: v => v,
   };
 
   constructor(props, context) {
@@ -58,42 +68,40 @@ class Input extends Component {
   }
 
   changeValue(event) {
-    const value = event.currentTarget.value;
+    const value = this.props.prepValue(event.currentTarget.value);
     this.props.setValue(value);
     this.props.onChange(value);
   }
 
   render() {
-    const { type, name, required, disabled, label, max, min, maxLength, minLength,
-      addOnBefore, addOnAfter, className, large, small } = this.props;
+    const { className, ...wrapperProps } = this.props;
+    const { type, name, required, disabled, label, step, max, min, maxLength, minLength,
+      addOnBefore, addOnAfter, btnBefore, large, small } = this.props;
     const id = `id_${name}`;
-    const inputOpts = { id, type, name, required, disabled, max, min, maxLength, minLength };
-
-    let statusClass = null;
-    if (this.props.replaceStatusClass) {
-      statusClass = this.props.replaceStatusClass;
-    } else if (!this.props.isPristine()) {
-      statusClass = `has-${this.props.isValid() ? 'success' : 'error'}`;
-    }
+    const inputOpts = { id, type, name, required, disabled, step, max, min, maxLength, minLength };
 
     return (
       <InputWrapper
+        {...wrapperProps}
+        className={this.props.wrapperClasses}
         id={id}
         label={label}
-        wrapperClasses={classNames(this.props.wrapperClasses, { required, disabled }, statusClass)}
       >
 
-        <div className={classNames({ 'input-group': addOnBefore || addOnAfter })}>
+        <div className={classNames({ 'input-group': addOnBefore || addOnAfter || btnBefore })}>
 
           { addOnBefore ?
             <span className='input-group-addon'>{ addOnBefore }</span>
           : null }
+
+          { btnBefore }
 
           <input
             className={classNames('form-control', className, {
               'form-control-lg': large,
               'form-control-sm': small,
             })}
+            ref={this.props.inputRef}
             {...inputOpts}
             value={this.props.getValue() || ''}
             placeholder={this.props.placeholder || label || ''}

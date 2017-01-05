@@ -1,23 +1,22 @@
 import React, { Component, PropTypes } from 'react';
 import { HOC } from 'formsy-react';
-import classNames from 'classnames';
+import { default as BaseTypedSelect } from '../TypedSelect';
 
 import InputWrapper from './InputWrapper';
 
 
-class TextArea extends Component {
+class TypedSelect extends Component {
 
   static propTypes = {
+    type: PropTypes.string,
     name: PropTypes.string.isRequired,
-    value: PropTypes.string,
     label: PropTypes.string,
     placeholder: PropTypes.string,
     wrapperClasses: PropTypes.string,
     className: PropTypes.string,
+    replaceStatusClass: PropTypes.string,
     required: PropTypes.bool,
     disabled: PropTypes.bool,
-    cols: PropTypes.number,
-    rows: PropTypes.number,
     onChange: PropTypes.func,
     setValue: PropTypes.func.isRequired,
     getValue: PropTypes.func.isRequired,
@@ -25,28 +24,48 @@ class TextArea extends Component {
     isValid: PropTypes.func.isRequired,
     getErrorMessage: PropTypes.func.isRequired,
     showRequired: PropTypes.func.isRequired,
-    children: PropTypes.node,
-    beforeField: PropTypes.node,
+    async: PropTypes.bool,
+    creatable: PropTypes.bool,
+    loadOptions: PropTypes.func,
+    selectOptions: PropTypes.object,
+    prepValue: PropTypes.func,
   };
 
   static defaultProps = {
     type: 'text',
+    required: false,
+    disabled: false,
+    onChange: () => {},
+    minimumInput: 0,
+    prepValue: v => v,
   };
 
   constructor(props, context) {
     super(props, context);
-    this._changeValue = this.changeValue.bind(this);
+    this.changeValue = this.changeValue.bind(this);
   }
 
-  changeValue(event) {
-    this.props.setValue(event.currentTarget.value);
+  changeValue(v) {
+    const value = this.props.prepValue(v);
+    this.props.setValue(value || '');
+    this.props.onChange(value);
   }
 
   render() {
     const { className, wrapperClasses, ...wrapperProps } = this.props;
-    const { name, label, required, disabled, cols, rows } = this.props;
+    const { type, name, required, disabled, label, selectOptions } = this.props;
     const id = `id_${name}`;
-    const inputOpts = { id, name, required, disabled, cols, rows };
+    const inputOpts = {
+      id,
+      type,
+      name,
+      required,
+      disabled,
+      value: this.props.getValue(),
+      onChange: this.changeValue,
+      className,
+      ...selectOptions,
+    };
 
     return (
       <InputWrapper
@@ -56,21 +75,12 @@ class TextArea extends Component {
         label={label}
       >
 
-        { this.props.beforeField }
-
-        <textarea
-          className={classNames('form-control', className)}
-          {...inputOpts}
-          value={this.props.getValue() || ''}
-          placeholder={this.props.placeholder || label || ''}
-          onChange={this._changeValue}
-        />
-
-        { this.props.children }
+        <BaseTypedSelect {...inputOpts} />
 
         <div className='feedback help-block'>
           { this.props.getErrorMessage() }
-          { this.props.showRequired() && !this.props.isPristine() ? 'This field is required.' : '' }
+          { this.props.showRequired() && !this.props.isPristine() ?
+            'This field is required.' : null }
         </div>
 
       </InputWrapper>
@@ -78,4 +88,4 @@ class TextArea extends Component {
   }
 }
 
-export default HOC(TextArea); // eslint-disable-line new-cap
+export default HOC(TypedSelect); // eslint-disable-line new-cap
