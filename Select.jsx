@@ -74,7 +74,7 @@ export class Select extends Component {
 
         </select>
 
-        <div className='feedback'>
+        <div className='form-control-feedback feedback'>
           { this.props.getErrorMessage() }
         </div>
 

@@ -122,7 +122,7 @@ class Radio extends Component {
           { radios }
         </div>
 
-        <div className='feedback'>
+        <div className='form-control-feedback feedback'>
           { this.props.getErrorMessage() }
         </div>
 

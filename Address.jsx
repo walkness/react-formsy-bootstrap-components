@@ -295,7 +295,7 @@ class Address extends Component {
         { includeCoordinates ?
           <fieldset className='coordinates'>
 
-            <p className='help-block'>
+            <p className='form-text help-block'>
               If you know this place's latitude and longitude coordinates, enter them here.
               Otherwise, we'll calculate them from the place's address.
             </p>

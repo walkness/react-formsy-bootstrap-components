@@ -3,7 +3,8 @@ import classNames from 'classnames';
 
 
 const InputWrapper = (props) => {
-  const { label, required, disabled, highlightSuccess, highlightError, replaceStatusClass } = props;
+  const { label, required, disabled, highlightSuccess, highlightError, replaceStatusClass,
+    horizontal } = props;
   const isValid = props.isValid();
   const isPristine = props.isPristine();
 
@@ -12,6 +13,7 @@ const InputWrapper = (props) => {
       className={classNames(
         'form-group',
         props.className, {
+          row: horizontal,
           'has-success': isValid && !isPristine && highlightSuccess && !replaceStatusClass,
           'has-danger': !isValid && !isPristine && highlightError && !replaceStatusClass,
           required,
@@ -21,10 +23,17 @@ const InputWrapper = (props) => {
       )}
     >
 
-      { label ? <label className='control-label' htmlFor={props.id}>{ label }</label> : null }
+      { label ?
+        <label
+          className={classNames('control-label', { 'col-form-label': horizontal })}
+          htmlFor={props.id}
+        >
+          { label }
+        </label>
+      : null }
 
     { props.helpText ?
-      <div className='help-text'>
+      <div className='form-text help-text'>
         { props.helpText }
       </div>
     : null }
@@ -53,6 +62,7 @@ InputWrapper.propTypes = {
   replaceStatusClass: PropTypes.string,
   isValid: PropTypes.func,
   isPristine: PropTypes.func,
+  horizontal: PropTypes.bool,
 };
 
 InputWrapper.defaultProps = {

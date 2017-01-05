@@ -114,7 +114,7 @@ export class Input extends Component {
 
         </div>
 
-        <div className='feedback help-block'>
+        <div className='form-control-feedback feedback help-block'>
           { this.props.getErrorMessage() }
           { this.props.showRequired() && !this.props.isPristine() ?
             'This field is required.' : null }
