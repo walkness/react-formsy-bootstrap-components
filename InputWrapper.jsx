@@ -4,7 +4,7 @@ import classNames from 'classnames';
 
 const InputWrapper = (props) => {
   const { label, required, disabled, highlightSuccess, highlightError, replaceStatusClass,
-    horizontal } = props;
+    horizontal, getValue } = props;
   const isValid = props.isValid();
   const isPristine = props.isPristine();
 
@@ -18,6 +18,7 @@ const InputWrapper = (props) => {
           'has-danger': !isValid && !isPristine && highlightError && !replaceStatusClass,
           required,
           disabled,
+          empty: !getValue(),
         },
         replaceStatusClass,
       )}
@@ -63,6 +64,7 @@ InputWrapper.propTypes = {
   isValid: PropTypes.func,
   isPristine: PropTypes.func,
   horizontal: PropTypes.bool,
+  getValue: PropTypes.func,
 };
 
 InputWrapper.defaultProps = {
@@ -70,6 +72,7 @@ InputWrapper.defaultProps = {
   highlightError: true,
   isValid: () => true,
   isPristine: () => true,
+  getValue: () => '',
 };
 
 export default InputWrapper;
