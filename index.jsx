@@ -9,8 +9,6 @@ import Radio from './Radio';
 import Select from './Select';
 import SubmitButton from './SubmitButton';
 import TextArea from './TextArea';
-import DatePicker from './DatePicker';
-import TypedSelect from './TypedSelect';
 import SelectMultipleCheckbox from './SelectMultipleCheckbox';
 
 Formsy.addValidationRule('minItems', (values, value, min) => (
@@ -31,7 +29,5 @@ export {
   Select,
   SubmitButton,
   TextArea,
-  DatePicker,
-  TypedSelect,
   SelectMultipleCheckbox,
 };
