@@ -3,15 +3,17 @@ import classNames from 'classnames';
 
 
 const SubmitButton = (props) => {
-  const { isSubmitting } = props;
+  const { isSubmitting, size } = props;
   return (
     <button
       type={props.type}
       className={classNames(
         'btn',
         `btn${props.outline ? '-outline' : ''}-${props.style}`,
-        props.className,
-        { 'is-loading': isSubmitting },
+        props.className, {
+          'is-loading': isSubmitting,
+          [`btn-${size}`]: !!size,
+        },
       )}
       disabled={!props.enabled || isSubmitting}
       onClick={props.onClick}
@@ -35,6 +37,7 @@ SubmitButton.propTypes = {
   onClick: PropTypes.func,
   children: PropTypes.node,
   type: PropTypes.string,
+  size: PropTypes.oneOf(['sm', 'lg']),
 };
 
 SubmitButton.defaultProps = {
