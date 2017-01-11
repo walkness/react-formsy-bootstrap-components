@@ -87,14 +87,14 @@ class Radio extends Component {
 
         { option.help && typeof option.help === 'string' ?
           <div
-            className='help-block'
+            className='form-text help-block'
             dangerouslySetInnerHTML={typeof option.help === 'string' ? {
               __html: option.help } : null}
           />
         : null }
 
         { option.help && typeof option.help !== 'string' ?
-          <div className='help-block'>{ option.help }</div>
+          <div className='form-text help-block'>{ option.help }</div>
         : null }
 
         </label>
