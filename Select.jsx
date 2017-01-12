@@ -22,6 +22,7 @@ export class Select extends Component {
     isValid: PropTypes.func,
     getErrorMessage: PropTypes.func,
     children: PropTypes.node,
+    custom: PropTypes.bool,
   };
 
   static defaultProps = {
@@ -44,7 +45,7 @@ export class Select extends Component {
   }
 
   render() {
-    const { className, wrapperClasses, ...wrapperProps } = this.props;
+    const { className, wrapperClasses, custom, ...wrapperProps } = this.props;
     const { name, required, disabled } = this.props;
     const id = `id_${name}`;
     const inputOpts = { id, name, required, disabled };
@@ -58,7 +59,7 @@ export class Select extends Component {
       >
 
         <select
-          className={classNames('form-control', className)}
+          className={classNames('form-control', className, { 'custom-select': custom })}
           {...inputOpts}
           value={this.props.getValue()}
           onChange={this._changeValue}
