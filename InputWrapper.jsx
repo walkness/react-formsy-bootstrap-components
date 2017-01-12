@@ -4,7 +4,7 @@ import classNames from 'classnames';
 
 const InputWrapper = (props) => {
   const { label, required, disabled, highlightSuccess, highlightError, replaceStatusClass,
-    horizontal, getValue } = props;
+    horizontal, getValue, helpText } = props;
   const isValid = props.isValid();
   const isPristine = props.isPristine();
 
@@ -19,6 +19,7 @@ const InputWrapper = (props) => {
           required,
           disabled,
           empty: !getValue(),
+          'has-help': !!helpText,
         },
         replaceStatusClass,
       )}
@@ -33,11 +34,11 @@ const InputWrapper = (props) => {
         </label>
       : null }
 
-    { props.helpText ?
-      <div className='form-text help-text'>
-        { props.helpText }
-      </div>
-    : null }
+      { helpText ?
+        <div className='form-text help-text'>
+          { helpText }
+        </div>
+      : null }
 
       <div className='control-wrapper'>
         { props.children }
