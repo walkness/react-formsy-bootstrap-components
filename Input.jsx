@@ -80,6 +80,18 @@ export class Input extends Component {
     const id = `id_${name}`;
     const inputOpts = { id, type, name, required, disabled, step, max, min, maxLength, minLength };
 
+    if (type === 'hidden') {
+      return (
+        <input
+          ref={this.props.inputRef}
+          {...inputOpts}
+          value={this.props.getValue() || ''}
+          placeholder={this.props.placeholder || label || ''}
+          onChange={this._changeValue}
+        />
+      );
+    }
+
     return (
       <InputWrapper
         {...wrapperProps}
