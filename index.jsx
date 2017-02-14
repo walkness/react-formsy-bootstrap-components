@@ -3,7 +3,6 @@ import Formsy from 'formsy-react';
 import Address, { addressMapping, reverseAddressMapping, addressEqual } from './Address';
 import Checkbox from './CheckBox';
 import Input, { passwordValidation } from './Input';
-import Email from './Email';
 import InputWrapper from './InputWrapper';
 import Radio from './Radio';
 import Select from './Select';
@@ -22,7 +21,6 @@ export {
   addressEqual,
   Checkbox,
   Input,
-  Email,
   passwordValidation,
   InputWrapper,
   Radio,
