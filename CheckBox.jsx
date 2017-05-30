@@ -1,69 +1,67 @@
 import React, { Component, PropTypes } from 'react';
-import { HOC } from 'formsy-react';
 import classNames from 'classnames';
+import { autobind } from 'core-decorators';
 
-export class Checkbox extends Component {
+import InputWrapper from './InputWrapper';
+
+class Checkbox extends Component {
 
   static propTypes = {
-    name: PropTypes.string.isRequired,
-    value: PropTypes.bool,
-    label: PropTypes.string,
-    required: PropTypes.bool,
+    className: PropTypes.string,
     disabled: PropTypes.bool,
-    wrapperClasses: PropTypes.string,
+    formsy: PropTypes.shape({
+      setValue: PropTypes.func,
+    }),
+    id: PropTypes.string,
+    label: PropTypes.string,
+    name: PropTypes.string.isRequired,
     onChange: PropTypes.func,
-    setValue: PropTypes.func,
-    isValid: PropTypes.func,
-    isPristine: PropTypes.func,
-    getValue: PropTypes.func,
+    renderFeedback: PropTypes.func,
+    required: PropTypes.bool,
+    statusClassName: PropTypes.func,
+    value: PropTypes.bool,
+    wrapperClassName: PropTypes.string,
   };
 
   static defaultProps = {
-    wrapperClasses: '',
-    getValue: () => null,
-    setValue: () => null,
-    isValid: () => null,
-    isPristine: () => null,
-    onChange: () => null,
-    required: false,
+    className: null,
     disabled: false,
+    formsy: {},
+    id: null,
+    label: null,
+    onChange: () => null,
+    renderFeedback: null,
+    required: false,
+    statusClassName: v => classNames(v),
+    value: null,
+    wrapperClassName: null,
   };
 
-  constructor(props, context) {
-    super(props, context);
-    this._changeValue = this.changeValue.bind(this);
-  }
-
+  @autobind
   changeValue(event) {
-    this.props.setValue(event.target.checked);
-    this.props.onChange(event);
+    const { formsy, onChange } = this.props;
+    const { setValue } = formsy;
+    if (setValue) setValue(event.target.checked);
+    if (onChange) onChange(event);
   }
 
   render() {
-    const { name, label, required, disabled, isPristine, isValid } = this.props;
-    const id = `id_${name}`;
-    const inputOpts = { id, name, required, disabled };
+    const {
+      value, label, required, disabled, formsy, className, statusClassName,
+      renderFeedback, wrapperClassName, ...inputOpts
+    } = this.props;
 
     return (
-      <div
-        className={classNames(
-          'form-check',
-          this.props.wrapperClasses,
-          { required },
-          { disabled },
-          { 'has-success': !isPristine() && isValid() && this.props.showSuccess },
-          { 'has-error': !isPristine() && !isValid() },
-        )}
-      >
+      <div className={statusClassName('form-check', wrapperClassName)}>
 
-        <label htmlFor={id} className='custom-control custom-checkbox'>
+        <label htmlFor={this.props.id} className='custom-control custom-checkbox'>
 
           <input
             type='checkbox'
             {...inputOpts}
-            className='custom-control-input'
-            onChange={this._changeValue}
-            checked={this.props.getValue()}
+            className={classNames('custom-control-input', className)}
+            onChange={this.changeValue}
+            checked={value}
           />
 
           <span className='custom-control-indicator' />
@@ -72,9 +70,11 @@ export class Checkbox extends Component {
 
         </label>
 
+        { renderFeedback && renderFeedback() }
+
       </div>
     );
   }
 }
 
-export default HOC(Checkbox); // eslint-disable-line new-cap
+export default InputWrapper(Checkbox); // eslint-disable-line new-cap

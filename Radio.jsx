@@ -1,29 +1,106 @@
 import React, { Component, PropTypes } from 'react';
-import { HOC } from 'formsy-react';
 import classNames from 'classnames';
 
+import InputWrapper from './InputWrapper';
 
-class Radio extends Component {
+
+const btnTypePropType = PropTypes.oneOfType([
+  PropTypes.object,
+  PropTypes.oneOf(['primary', 'secondary', 'success', 'warning', 'danger', 'info']),
+]);
+
+
+const HelpBlock = ({ ...props }) => (
+  <div className='form-text help-block' {...props} />
+);
+
+
+const Radio = (props) => {
+  const { id, label, btnType, help, selected, asButton, ...inputOpts } = props;
+
+  const helpComponent = () => {
+    if (!help) return null;
+
+    if (typeof help === 'string') {
+      return <HelpBlock dangerouslySetInnerHTML={{ __html: help }} />;
+    }
+
+    return <HelpBlock>{ help }</HelpBlock>;
+  };
+
+  return (
+    <label
+      key={id}
+      htmlFor={id}
+      className={classNames({
+        [`btn btn-${btnType}`]: asButton,
+        'custom-control custom-radio': !asButton,
+        active: selected,
+      })}
+    >
+
+      <input
+        id={id}
+        type='radio'
+        {...inputOpts}
+        checked={selected}
+        className={asButton ? null : 'custom-control-input'}
+      />
+
+      { !asButton ?
+        <span className='custom-control-indicator' />
+      : null }
+
+      { !asButton ?
+        <span className='custom-control-description'>{ label }</span>
+      : label }
+
+      { helpComponent() }
+
+    </label>
+  );
+};
+
+Radio.propTypes = {
+  asButton: PropTypes.bool,
+  btnType: btnTypePropType,
+  help: PropTypes.node,
+  id: PropTypes.string.isRequired,
+  label: PropTypes.string.isRequired,
+  name: PropTypes.string.isRequired,
+  selected: PropTypes.bool,
+  value: PropTypes.string.isRequired,
+};
+
+Radio.defaultProps = {
+  asButton: false,
+  btnType: null,
+  selected: false,
+};
+
+
+class RadioGroup extends Component {
 
   static propTypes = {
-    name: PropTypes.string.isRequired,
-    label: PropTypes.string,
-    wrapperClasses: PropTypes.string,
-    required: PropTypes.bool,
-    disabled: PropTypes.bool,
-    options: PropTypes.array.isRequired,
-    onChange: PropTypes.func,
-    setValue: PropTypes.func.isRequired,
-    getValue: PropTypes.func.isRequired,
-    isValid: PropTypes.func.isRequired,
-    isPristine: PropTypes.func.isRequired,
-    getErrorMessage: PropTypes.func.isRequired,
-    children: PropTypes.node,
     asButtons: PropTypes.bool,
-    btnType: PropTypes.oneOfType([
-      PropTypes.object,
-      PropTypes.oneOf(['primary', 'secondary', 'success', 'warning', 'danger', 'info']),
-    ]),
+    btnType: btnTypePropType,
+    children: PropTypes.node,
+    disabled: PropTypes.bool,
+    formsy: PropTypes.shape({
+      setValue: PropTypes.func,
+    }),
+    label: PropTypes.string,
+    name: PropTypes.string.isRequired,
+    onChange: PropTypes.func,
+    options: PropTypes.arrayOf(PropTypes.shape({
+      value: PropTypes.string.isRequired,
+      label: PropTypes.node.isRequired,
+    })).isRequired,
+    renderFeedback: PropTypes.func,
+    required: PropTypes.bool,
+    statusClassName: PropTypes.func,
+    value: PropTypes.string,
+    wrapperClassName: PropTypes.string,
   };
 
   static defaultProps = {
@@ -37,100 +114,68 @@ class Radio extends Component {
   }
 
   changeValue(event) {
-    this.props.setValue(event.currentTarget.value);
-    this.props.onChange(event.currentTarget.value);
+    const { formsy, onChange } = this.props;
+    const { setValue } = formsy;
+    const value = event.currentTarget.value;
+    if (setValue) setValue(value);
+    if (onChange) onChange(event);
+  }
+
+  renderRadios() {
+    const { name, options, asButtons } = this.props;
+    return options.map(({ btnType, key, value, label, disabled, ...radioProps }) => {
+      let type = this.props.btnType;
+      if (btnType) {
+        type = btnType;
+      } else if (this.props.btnType.constructor === {}.constructor) {
+        type = this.props.btnType[this.props.value] || 'secondary';
+      }
+      const id = `id_${name}_${key}`;
+      return (
+        <Radio
+          key={id}
+          {...radioProps}
+          id={id}
+          value={key || value}
+          label={key ? value : label}
+          btnType={type}
+          asButton={asButtons}
+          required={this.props.required}
+          disabled={this.props.disabled || disabled}
+        />
+      );
+    });
   }
 
   render() {
-    const { name, required, disabled, asButtons, btnType } = this.props;
-    const inputOpts = { name, required, disabled };
-
-    const value = this.props.getValue();
-
-    const radios = this.props.options.map(option => {
-      const id = `id_${name}_${option.key}`;
-      const checked = value === option.key;
-      let type = btnType;
-      if (option.btnType) {
-        type = option.btnType;
-      } else if (btnType.constructor === {}.constructor) {
-        type = btnType[value] || 'secondary';
-      }
-      return (
-        <label
-          key={id}
-          htmlFor={id}
-          className={classNames({
-            [`btn btn-${type}`]: asButtons,
-            'custom-control custom-radio': !asButtons,
-            active: checked,
-          })}
-        >
-
-          <input
-            id={id}
-            type='radio'
-            {...inputOpts}
-            value={option.key}
-            checked={checked}
-            onChange={this._changeValue}
-            className={asButtons ? null : 'custom-control-input'}
-          />
-
-        { !asButtons ?
-          <span className='custom-control-indicator' />
-        : null }
-
-        { !asButtons ?
-          <span className='custom-control-description'>{ option.value }</span>
-        : option.value }
-
-        { option.help && typeof option.help === 'string' ?
-          <div
-            className='form-text help-block'
-            dangerouslySetInnerHTML={typeof option.help === 'string' ? {
-              __html: option.help } : null}
-          />
-        : null }
-
-        { option.help && typeof option.help !== 'string' ?
-          <div className='form-text help-block'>{ option.help }</div>
-        : null }
-
-        </label>
-      );
-    });
-
+    const {
+      name, value, label, wrapperClassName, required, disabled, onChange, children, asButtons,
+      btnType, renderFeedback, statusClassName, options, formsy, ...wrapperProps
+    } = this.props;
     return (
       <div
-        className={classNames(
-          'radio-group',
-          this.props.wrapperClasses,
-          { required, disabled },
-          { [`has-${this.props.isValid() ? 'success' : 'error'}`]: !this.props.isPristine() },
-        )}
+        className={statusClassName('radio-group', wrapperClassName)}
+        {...wrapperProps}
       >
 
         <div className='control-label radio-group-label'>
-          { this.props.label }
+          { label }
         </div>
 
         <div
           className={classNames('control-wrapper', { 'btn-group': asButtons })}
           data-toggle={asButtons ? 'buttons' : null}
         >
-          { radios }
+          { this.renderRadios() }
         </div>
 
-        <div className='form-control-feedback feedback'>
-          { this.props.getErrorMessage() }
-        </div>
+        { renderFeedback && renderFeedback() }
 
-        { this.props.children }
+        { children }
 
       </div>
     );
   }
 }
 
-export default HOC(Radio); // eslint-disable-line new-cap
+export default InputWrapper(RadioGroup);

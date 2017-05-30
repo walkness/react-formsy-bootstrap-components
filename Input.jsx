@@ -1,104 +1,90 @@
 import React, { Component, PropTypes } from 'react';
-import { HOC } from 'formsy-react';
 import classNames from 'classnames';
+import { autobind } from 'core-decorators';
 
 import InputWrapper from './InputWrapper';
+import FormGroup from './FormGroup';
 
-export const passwordValidation = {
-  validations: {
-    minLength: 8,
-    matchRegexp: /^(?=.*[A-Z])(?=.*[0-9])(?=.*[a-z]).*$/,
-  },
-  validationErrors: {
-    minLength: 'Must be at least 8 characters long.',
-    matchRegexp: 'Must contain at least one uppercase letter, one lowercase letter, and one number.', // eslint-disable-line max-len
-  },
-};
 
-export class Input extends Component {
+class Input extends Component {
 
   static propTypes = {
-    type: PropTypes.string,
-    name: PropTypes.string.isRequired,
-    label: PropTypes.string,
-    placeholder: PropTypes.string,
-    className: PropTypes.string,
-    wrapperClasses: PropTypes.string,
-    replaceStatusClass: PropTypes.string,
-    required: PropTypes.bool,
-    disabled: PropTypes.bool,
-    maxLength: PropTypes.number,
-    minLength: PropTypes.number,
-    step: PropTypes.number,
-    max: PropTypes.number,
-    min: PropTypes.number,
+    addOnAfter: PropTypes.node,
     addOnBefore: PropTypes.node,
     btnBefore: PropTypes.element,
-    addOnAfter: PropTypes.node,
-    onChange: PropTypes.func,
-    setValue: PropTypes.func.isRequired,
-    getValue: PropTypes.func.isRequired,
-    isPristine: PropTypes.func,
-    isValid: PropTypes.func,
-    getErrorMessage: PropTypes.func,
-    showRequired: PropTypes.func,
     children: PropTypes.node,
-    large: PropTypes.bool,
-    small: PropTypes.bool,
+    className: PropTypes.string,
+    disabled: PropTypes.bool,
+    formsy: PropTypes.shape({
+      setValue: PropTypes.func,
+    }),
     inputRef: PropTypes.func,
+    label: PropTypes.string,
+    large: PropTypes.bool,
+    onChange: PropTypes.func,
+    placeholder: PropTypes.string,
     prepValue: PropTypes.func,
+    renderFeedback: PropTypes.func,
+    required: PropTypes.bool,
+    small: PropTypes.bool,
+    statusClassName: PropTypes.func,
+    type: PropTypes.string,
+    value: PropTypes.string,
   };
 
   static defaultProps = {
-    type: 'text',
-    required: false,
+    addOnAfter: null,
+    addOnBefore: null,
+    btnBefore: null,
+    children: null,
+    className: null,
     disabled: false,
-    getErrorMessage: () => null,
-    showRequired: () => null,
-    isPristine: () => null,
-    isValid: () => true,
-    onChange: () => {},
+    formsy: {},
     inputRef: () => {},
+    label: '',
+    large: false,
+    onChange: null,
+    placeholder: '',
     prepValue: v => v,
+    renderFeedback: null,
+    required: false,
+    small: false,
+    statusClassName: null,
+    type: 'text',
+    value: '',
   };
 
-  constructor(props, context) {
-    super(props, context);
-    this._changeValue = this.changeValue.bind(this);
-  }
-
+  @autobind
   changeValue(event) {
-    const value = this.props.prepValue(event.currentTarget.value);
-    this.props.setValue(value);
-    this.props.onChange(value);
+    const { formsy, onChange } = this.props;
+    const { setValue } = formsy;
+    if (setValue || onChange) {
+      const value = this.props.prepValue(event.currentTarget.value);
+      if (setValue) setValue(value);
+      if (onChange) onChange(value);
+    }
   }
 
   render() {
-    const { className, ...wrapperProps } = this.props;
-    const { type, name, required, disabled, label, step, max, min, maxLength, minLength,
-      addOnBefore, addOnAfter, btnBefore, large, small } = this.props;
-    const id = `id_${name}`;
-    const inputOpts = { id, type, name, required, disabled, step, max, min, maxLength, minLength };
+    const {
+      className, value, label, addOnBefore, addOnAfter, btnBefore, large, small, renderFeedback,
+      inputRef, prepValue, formsy, statusClassName, ...inputOpts
+    } = this.props;
 
-    if (type === 'hidden') {
+    if (this.props.type === 'hidden') {
       return (
         <input
           ref={this.props.inputRef}
           {...inputOpts}
-          value={this.props.getValue() || ''}
+          value={value || ''}
           placeholder={this.props.placeholder || label || ''}
-          onChange={this._changeValue}
+          onChange={this.changeValue}
         />
       );
     }
 
     return (
-      <InputWrapper
-        {...wrapperProps}
-        className={this.props.wrapperClasses}
-        id={id}
-        label={label}
-      >
+      <div>
 
         <div className={classNames({ 'input-group': addOnBefore || addOnAfter || btnBefore })}>
 
@@ -113,11 +99,11 @@ export class Input extends Component {
               'form-control-lg': large,
               'form-control-sm': small,
             })}
-            ref={this.props.inputRef}
+            ref={inputRef}
             {...inputOpts}
-            value={this.props.getValue() || ''}
+            value={value || ''}
             placeholder={this.props.placeholder || label || ''}
-            onChange={this._changeValue}
+            onChange={this.changeValue}
           />
 
           { addOnAfter ?
@@ -126,17 +112,13 @@ export class Input extends Component {
 
         </div>
 
-        <div className='form-control-feedback feedback help-block'>
-          { this.props.getErrorMessage() }
-          { this.props.showRequired() && !this.props.isPristine() ?
-            'This field is required.' : null }
-        </div>
+        { renderFeedback && renderFeedback() }
 
         { this.props.children }
 
-      </InputWrapper>
+      </div>
     );
   }
 }
 
-export default HOC(Input); // eslint-disable-line new-cap
+export default InputWrapper(Input, FormGroup);

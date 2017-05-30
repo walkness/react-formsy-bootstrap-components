@@ -1,89 +1,103 @@
 import React, { PropTypes, Component } from 'react';
-import { HOC } from 'formsy-react';
 import classNames from 'classnames';
+import { autobind } from 'core-decorators';
 
 import InputWrapper from './InputWrapper';
+import FormGroup from './FormGroup';
 
 
-export class Select extends Component {
+const Option = ({ label, ...props }) => (
+  <option {...props}>{ label }</option>
+);
+
+Option.propTypes = {
+  label: PropTypes.node.isRequired,
+};
+
+
+class Select extends Component {
 
   static propTypes = {
-    name: PropTypes.string.isRequired,
-    label: PropTypes.string,
-    required: PropTypes.bool,
-    disabled: PropTypes.bool,
-    options: PropTypes.array.isRequired,
-    wrapperClasses: PropTypes.string,
-    className: PropTypes.string,
-    onChange: PropTypes.func,
-    setValue: PropTypes.func.isRequired,
-    getValue: PropTypes.func.isRequired,
-    isPristine: PropTypes.func,
-    isValid: PropTypes.func,
-    getErrorMessage: PropTypes.func,
     children: PropTypes.node,
-    custom: PropTypes.bool,
+    className: PropTypes.string,
+    formsy: PropTypes.shape({
+      setValue: PropTypes.func,
+    }),
+    id: PropTypes.string.isRequired,
+    name: PropTypes.string.isRequired,
+    onChange: PropTypes.func,
+    options: PropTypes.arrayOf(PropTypes.shape({
+      value: PropTypes.string.isRequired,
+      label: PropTypes.node.isRequired,
+    })).isRequired,
+    renderFeedback: PropTypes.func.isRequired,
+    statusClassName: PropTypes.func.isRequired,
+    value: PropTypes.string,
   };
 
   static defaultProps = {
-    onChange: () => {},
+    children: null,
+    className: '',
+    formsy: {},
+    getErrorMessage: () => null,
     isPristine: () => null,
     isValid: () => true,
-    getErrorMessage: () => null,
+    onChange: () => {},
+    value: null,
   };
 
-  constructor(props, context) {
-    super(props, context);
-    this._changeValue = this.changeValue.bind(this);
-  }
-
+  @autobind
   changeValue(event) {
-    let value = event.currentTarget.value;
-    if (value === 'null') value = null;
-    this.props.setValue(value);
-    this.props.onChange(value);
+    const { formsy, onChange } = this.props;
+    const { setValue } = formsy;
+    if (setValue || onChange) {
+      let value = event.currentTarget.value;
+      if (value === 'null') value = null;
+      if (setValue) setValue(value);
+      if (onChange) onChange(value);
+    }
   }
 
   render() {
-    const { className, wrapperClasses, custom, ...wrapperProps } = this.props;
-    const { name, required, disabled } = this.props;
-    const id = `id_${name}`;
-    const inputOpts = { id, name, required, disabled };
-
+    const {
+      className, renderFeedback, statusClassName, ...inputOpts
+    } = this.props;
     return (
-      <InputWrapper
-        {...wrapperProps}
-        className={wrapperClasses}
-        id={id}
-        label={this.props.label}
-      >
+      <div>
 
         <select
           className={classNames('form-control', className, { 'custom-select': custom })}
           {...inputOpts}
-          value={this.props.getValue()}
-          onChange={this._changeValue}
+          value={this.props.value}
+          onChange={this.changeValue}
         >
 
-          { this.props.options.map(option => {
-            let value = option.key;
-            if (option.key === null) {
-              value = 'null';
+          { this.props.options.map(({ key, value, label, id, ...optionProps }) => {
+            let optionValue = key || value;
+            if (key === null) {
+              optionValue = 'null';
             }
-            return <option key={value} value={value}>{ option.value }</option>;
+            const optionId = id || `${this.props.id}_${value}`;
+            return (
+              <Option
+                key={optionId}
+                {...optionProps}
+                id={optionId}
+                value={optionValue}
+                label={key ? value : label}
+              />
+            );
           }) }
 
         </select>
 
-        <div className='form-control-feedback feedback'>
-          { this.props.getErrorMessage() }
-        </div>
+        { renderFeedback && renderFeedback() }
 
         { this.props.children }
 
-      </InputWrapper>
+      </div>
     );
   }
 }
 
-export default HOC(Select); // eslint-disable-line new-cap
+export default InputWrapper(Select, FormGroup); // eslint-disable-line new-cap

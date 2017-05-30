@@ -1,81 +1,76 @@
 import React, { Component, PropTypes } from 'react';
-import { HOC } from 'formsy-react';
 import classNames from 'classnames';
+import { autobind } from 'core-decorators';
 
 import InputWrapper from './InputWrapper';
+import FormGroup from './FormGroup';
 
 
 class TextArea extends Component {
 
   static propTypes = {
-    name: PropTypes.string.isRequired,
-    value: PropTypes.string,
-    label: PropTypes.string,
-    placeholder: PropTypes.string,
-    wrapperClasses: PropTypes.string,
-    className: PropTypes.string,
-    required: PropTypes.bool,
-    disabled: PropTypes.bool,
-    cols: PropTypes.number,
-    rows: PropTypes.number,
-    onChange: PropTypes.func,
-    setValue: PropTypes.func.isRequired,
-    getValue: PropTypes.func.isRequired,
-    isPristine: PropTypes.func.isRequired,
-    isValid: PropTypes.func.isRequired,
-    getErrorMessage: PropTypes.func.isRequired,
-    showRequired: PropTypes.func.isRequired,
-    children: PropTypes.node,
     beforeField: PropTypes.node,
+    children: PropTypes.node,
+    className: PropTypes.string,
+    formsy: PropTypes.shape({
+      setValue: PropTypes.func,
+    }),
+    label: PropTypes.string,
+    onChange: PropTypes.func,
+    placeholder: PropTypes.string,
+    renderFeedback: PropTypes.func,
+    statusClassName: PropTypes.func,
+    value: PropTypes.string,
   };
 
   static defaultProps = {
+    beforeField: null,
+    children: null,
+    className: null,
+    formsy: {},
+    label: null,
+    onChange: null,
+    placeholder: '',
+    renderFeedback: null,
+    statusClassName: null,
     type: 'text',
+    value: '',
   };
 
-  constructor(props, context) {
-    super(props, context);
-    this._changeValue = this.changeValue.bind(this);
-  }
-
+  @autobind
   changeValue(event) {
-    this.props.setValue(event.currentTarget.value);
+    const { formsy, onChange } = this.props;
+    const { setValue } = formsy;
+    const value = event.currentTarget.value;
+    if (setValue) setValue(value);
+    if (onChange) onChange(value);
   }
 
   render() {
-    const { className, wrapperClasses, ...wrapperProps } = this.props;
-    const { name, label, required, disabled, cols, rows } = this.props;
-    const id = `id_${name}`;
-    const inputOpts = { id, name, required, disabled, cols, rows };
+    const {
+      className, label, renderFeedback, beforeField, formsy, children, statusClassName, ...inputOpts
+    } = this.props;
 
     return (
-      <InputWrapper
-        {...wrapperProps}
-        className={wrapperClasses}
-        id={id}
-        label={label}
-      >
+      <div>
 
-        { this.props.beforeField }
+        { beforeField }
 
         <textarea
           className={classNames('form-control', className)}
           {...inputOpts}
-          value={this.props.getValue() || ''}
+          value={this.props.value || ''}
           placeholder={this.props.placeholder || label || ''}
-          onChange={this._changeValue}
+          onChange={this.changeValue}
         />
 
-        { this.props.children }
+        { children }
 
-        <div className='form-control-feedback feedback help-block'>
-          { this.props.getErrorMessage() }
-          { this.props.showRequired() && !this.props.isPristine() ? 'This field is required.' : '' }
-        </div>
+        { renderFeedback && renderFeedback() }
 
-      </InputWrapper>
+      </div>
     );
   }
 }
 
-export default HOC(TextArea); // eslint-disable-line new-cap
+export default InputWrapper(TextArea, FormGroup); // eslint-disable-line new-cap
