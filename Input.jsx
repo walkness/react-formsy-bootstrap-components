@@ -101,7 +101,7 @@ class Input extends Component {
             })}
             ref={inputRef}
             {...inputOpts}
-            value={value || ''}
+            value={value || (this.props.type === 'color' ? undefined : '')}
             placeholder={this.props.placeholder || label || ''}
             onChange={this.changeValue}
           />
