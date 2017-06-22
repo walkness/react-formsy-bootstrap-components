@@ -41,7 +41,7 @@ export const statusClassName = (props, ...className) => {
 };
 
 
-export default function InputWrapper(WrappedComponent, Wrapper = null) {
+export default function InputWrapper(WrappedComponent, Wrapper = null, extraWrapperProps = {}) {
   return class extends Component {
     static propTypes = Object.assign({}, formsyPropTypes, {
       highlightError: PropTypes.bool,
@@ -171,6 +171,9 @@ export default function InputWrapper(WrappedComponent, Wrapper = null) {
       );
 
       if (Wrapper) {
+        const {
+          className: extraWrapperClassName, ...classlessExtraWrapperProps
+        } = extraWrapperProps;
         const formGroupProps = {
           afterControl,
           disabled,
@@ -181,6 +184,7 @@ export default function InputWrapper(WrappedComponent, Wrapper = null) {
           replaceStatusClass,
           required,
           ...wrapperProps,
+          ...classlessExtraWrapperProps,
         };
         const valid = this.props.isValid();
         const pristine = this.props.isPristine();
@@ -189,7 +193,7 @@ export default function InputWrapper(WrappedComponent, Wrapper = null) {
             success={valid && !pristine && highlightSuccess}
             danger={!valid && !pristine && highlightError}
             empty={!currentValue}
-            className={wrapperClassName}
+            className={classNames(wrapperClassName, extraWrapperClassName)}
             statusClassName={this.statusClassName}
             {...formGroupProps}
           >
