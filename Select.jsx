@@ -7,18 +7,27 @@ import InputWrapper from './InputWrapper';
 import FormGroup from './FormGroup';
 
 
-const Option = ({ label, ...props }) => (
-  <option {...props}>{ label }</option>
+const nullStr = 'null';
+
+
+const Option = ({ label, value, ...props }) => (
+  <option value={value === null ? nullStr : value} {...props}>{ label }</option>
 );
 
 Option.propTypes = {
   label: PropTypes.node.isRequired,
+  value: PropTypes.string,
+};
+
+Option.defaultProps = {
+  value: undefined,
 };
 
 
 class Select extends Component {
 
   static propTypes = {
+    allowNull: PropTypes.bool,
     children: PropTypes.node,
     className: PropTypes.string,
     custom: PropTypes.bool,
@@ -27,6 +36,7 @@ class Select extends Component {
     }),
     id: PropTypes.string.isRequired,
     name: PropTypes.string.isRequired,
+    nullLabel: PropTypes.string,
     onChange: PropTypes.func,
     options: PropTypes.arrayOf(PropTypes.shape({
       value: PropTypes.string.isRequired,
@@ -38,10 +48,12 @@ class Select extends Component {
   };
 
   static defaultProps = {
+    allowNull: false,
     children: null,
     className: '',
     custom: false,
     formsy: {},
+    nullLabel: '---',
     onChange: null,
     value: null,
   };
@@ -52,7 +64,7 @@ class Select extends Component {
     const { setValue } = formsy;
     if (setValue || onChange) {
       let value = event.currentTarget.value;
-      if (value === 'null') value = null;
+      if (value === nullStr) value = null;
       if (setValue) setValue(value);
       if (onChange) onChange(value, event);
     }
@@ -60,7 +72,8 @@ class Select extends Component {
 
   render() {
     const {
-      className, renderFeedback, statusClassName, custom, formsy, options, onChange, ...inputOpts
+      className, renderFeedback, statusClassName, custom, formsy, options,
+      onChange, allowNull, nullLabel, ...inputOpts
     } = this.props;
     return (
       <div>
@@ -68,9 +81,17 @@ class Select extends Component {
         <select
           className={classNames('form-control', className, { 'custom-select': custom })}
           {...inputOpts}
-          value={this.props.value}
+          value={this.props.value || ''}
           onChange={this.changeValue}
         >
+
+          { allowNull ?
+            <Option
+              label={nullLabel}
+              id={`${this.props.id}_null`}
+              value={null}
+            />
+          : null }
 
           { this.props.options.map(({ key, value, label, id, ...optionProps }) => {
             let optionValue = key || value;
