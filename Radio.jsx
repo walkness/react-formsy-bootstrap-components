@@ -115,7 +115,7 @@ class RadioGroup extends Component {
     const { setValue } = formsy;
     const value = event.currentTarget.value;
     if (setValue) setValue(value);
-    if (onChange) onChange(value);
+    if (onChange) onChange(value, event);
   }
 
   renderRadios() {
@@ -132,6 +132,7 @@ class RadioGroup extends Component {
         <Radio
           key={id}
           {...radioProps}
+          name={name}
           id={id}
           value={key || value}
           label={key ? value : label}

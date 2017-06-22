@@ -43,7 +43,7 @@ class TextArea extends Component {
     const { setValue } = formsy;
     const value = event.currentTarget.value;
     if (setValue) setValue(value);
-    if (onChange) onChange(value);
+    if (onChange) onChange(value, event);
   }
 
   render() {

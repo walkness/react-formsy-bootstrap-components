@@ -3,6 +3,8 @@ import classNames from 'classnames';
 import { autobind } from 'core-decorators';
 
 import InputWrapper from './InputWrapper';
+import HelpBlock from './HelpBlock';
+
 
 class Checkbox extends Component {
 
@@ -12,6 +14,7 @@ class Checkbox extends Component {
     formsy: PropTypes.shape({
       setValue: PropTypes.func,
     }),
+    help: PropTypes.oneOfType([PropTypes.string, PropTypes.node]),
     id: PropTypes.string,
     label: PropTypes.string,
     name: PropTypes.string.isRequired,
@@ -27,6 +30,7 @@ class Checkbox extends Component {
     className: null,
     disabled: false,
     formsy: {},
+    help: null,
     id: null,
     label: null,
     onChange: () => null,
@@ -41,8 +45,18 @@ class Checkbox extends Component {
   changeValue(event) {
     const { formsy, onChange } = this.props;
     const { setValue } = formsy;
-    if (setValue) setValue(event.target.checked);
-    if (onChange) onChange(event);
+    const value = event.target.checked;
+    if (setValue) setValue(value);
+    if (onChange) onChange(value, event);
+  }
+
+  renderHelpBlock() {
+    const { help } = this.props;
+    if (!help) return null;
+    if (typeof help === 'string') {
+      return <HelpBlock dangerouslySetInnerHTML={{ __html: help }} />;
+    }
+    return <HelpBlock>{ help }</HelpBlock>;
   }
 
   render() {
@@ -68,15 +82,7 @@ class Checkbox extends Component {
 
           <span className='custom-control-description'>{ label }</span>
 
-          { help ?
-            <div
-              className='help-block'
-              dangerouslySetInnerHTML={typeof help === 'string' ? {
-                __html: help } : null}
-            >
-              { help }
-            </div>
-          : null }
+          { this.renderHelpBlock() }
 
         </label>
 
@@ -87,6 +93,4 @@ class Checkbox extends Component {
   }
 }
 
-export { Checkbox as Unwrapped };
-
-export default InputWrapper(Checkbox); // eslint-disable-line new-cap
+export default InputWrapper(Checkbox);

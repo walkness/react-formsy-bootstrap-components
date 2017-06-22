@@ -61,7 +61,7 @@ class Input extends Component {
     if (setValue || onChange) {
       const value = this.props.prepValue(event.currentTarget.value);
       if (setValue) setValue(value);
-      if (onChange) onChange(value);
+      if (onChange) onChange(value, event);
     }
   }
 

@@ -53,7 +53,7 @@ class Select extends Component {
       let value = event.currentTarget.value;
       if (value === 'null') value = null;
       if (setValue) setValue(value);
-      if (onChange) onChange(value);
+      if (onChange) onChange(value, event);
     }
   }
 
