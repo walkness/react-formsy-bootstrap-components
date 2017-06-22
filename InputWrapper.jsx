@@ -69,8 +69,8 @@ export default function InputWrapper(WrappedComponent, Wrapper = null) {
       setValidations: () => {},
       showError: () => false,
       showRequired: () => false,
-      validationError: () => null,
-      validationErrors: () => [],
+      validationError: null,
+      validationErrors: null,
       wrappedComponentRef: () => {},
       wrapperProps: {},
     };

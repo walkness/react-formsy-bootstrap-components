@@ -48,7 +48,7 @@ class Checkbox extends Component {
   render() {
     const {
       value, label, required, disabled, formsy, className, statusClassName,
-      renderFeedback, wrapperClassName, ...inputOpts
+      renderFeedback, wrapperClassName, help, ...inputOpts
     } = this.props;
 
     return (
@@ -68,6 +68,16 @@ class Checkbox extends Component {
 
           <span className='custom-control-description'>{ label }</span>
 
+          { help ?
+            <div
+              className='help-block'
+              dangerouslySetInnerHTML={typeof help === 'string' ? {
+                __html: help } : null}
+            >
+              { help }
+            </div>
+          : null }
+
         </label>
 
         { renderFeedback && renderFeedback() }
@@ -76,5 +86,7 @@ class Checkbox extends Component {
     );
   }
 }
+
+export { Checkbox as Unwrapped };
 
 export default InputWrapper(Checkbox); // eslint-disable-line new-cap

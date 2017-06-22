@@ -1,5 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 import classNames from 'classnames';
+import { autobind } from 'core-decorators';
 
 import InputWrapper from './InputWrapper';
 
@@ -108,17 +109,13 @@ class RadioGroup extends Component {
     btnType: 'primary',
   };
 
-  constructor(props, context) {
-    super(props, context);
-    this._changeValue = this.changeValue.bind(this);
-  }
-
+  @autobind
   changeValue(event) {
     const { formsy, onChange } = this.props;
     const { setValue } = formsy;
     const value = event.currentTarget.value;
     if (setValue) setValue(value);
-    if (onChange) onChange(event);
+    if (onChange) onChange(value);
   }
 
   renderRadios() {
@@ -130,7 +127,7 @@ class RadioGroup extends Component {
       } else if (this.props.btnType.constructor === {}.constructor) {
         type = this.props.btnType[this.props.value] || 'secondary';
       }
-      const id = `id_${name}_${key}`;
+      const id = `id_${name}_${key || value}`;
       return (
         <Radio
           key={id}
@@ -138,10 +135,12 @@ class RadioGroup extends Component {
           id={id}
           value={key || value}
           label={key ? value : label}
+          selected={(key || value) === this.props.value}
           btnType={type}
           asButton={asButtons}
           required={this.props.required}
           disabled={this.props.disabled || disabled}
+          onChange={this.changeValue}
         />
       );
     });

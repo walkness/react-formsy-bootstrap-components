@@ -20,6 +20,7 @@ class Select extends Component {
   static propTypes = {
     children: PropTypes.node,
     className: PropTypes.string,
+    custom: PropTypes.bool,
     formsy: PropTypes.shape({
       setValue: PropTypes.func,
     }),
@@ -38,11 +39,9 @@ class Select extends Component {
   static defaultProps = {
     children: null,
     className: '',
+    custom: false,
     formsy: {},
-    getErrorMessage: () => null,
-    isPristine: () => null,
-    isValid: () => true,
-    onChange: () => {},
+    onChange: null,
     value: null,
   };
 
@@ -60,7 +59,7 @@ class Select extends Component {
 
   render() {
     const {
-      className, renderFeedback, statusClassName, ...inputOpts
+      className, renderFeedback, statusClassName, custom, formsy, options, onChange, ...inputOpts
     } = this.props;
     return (
       <div>
