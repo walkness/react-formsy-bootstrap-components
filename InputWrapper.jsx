@@ -103,10 +103,12 @@ export default function InputWrapper(WrappedComponent, Wrapper = null, extraWrap
     renderErrorMessages() {
       const { getErrorMessages } = this.props;
       return getErrorMessages().map((error, i) => {
+        /* eslint-disable react/no-array-index-key */
         if (error.message) {
           return <ErrorMessage key={i} {...error} />;
         }
         return <ErrorMessage key={i} message={error} />;
+        /* eslint-enable react/no-array-index-key */
       });
     }
 
