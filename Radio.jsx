@@ -54,10 +54,11 @@ const Radio = (props) => {
       : null }
 
       { !asButton ?
-        <span className='custom-control-description'>{ label }</span>
+        <div className='custom-control-description'>
+          { label }
+          { helpComponent() }
+        </div>
       : label }
-
-      { helpComponent() }
 
     </label>
   );

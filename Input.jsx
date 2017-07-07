@@ -85,9 +85,13 @@ class Input extends Component {
     }
 
     return (
-      <div>
+      <div className='input'>
 
-        <div className={classNames({ 'input-group': addOnBefore || addOnAfter || btnBefore })}>
+        <div
+          className={classNames('not-input-group', {
+            'input-group': addOnBefore || addOnAfter || btnBefore,
+          })}
+        >
 
           { addOnBefore ?
             <span className='input-group-addon'>{ addOnBefore }</span>
