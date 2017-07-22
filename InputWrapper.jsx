@@ -156,6 +156,10 @@ export default function InputWrapper(WrappedComponent, Wrapper = null, extraWrap
       } = noFormsyProps;
       const { required, disabled, label } = this.props;
 
+      if (!Wrapper) {
+        wrappedComponentProps.wrapperClassName = wrapperClassName;
+      }
+
       const currentValue = this.getCurrentValue();
 
       const id = this.props.id || `${idPrefix}_${this.props.name}`;
