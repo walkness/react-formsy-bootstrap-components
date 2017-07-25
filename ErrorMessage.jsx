@@ -11,7 +11,7 @@ const ErrorMessage = ({ message, code }) => (
 
 ErrorMessage.propTypes = {
   message: PropTypes.node.isRequired,
-  code: PropTypes.code,
+  code: PropTypes.string,
 };
 
 ErrorMessage.defaultProps = {
