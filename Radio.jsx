@@ -30,38 +30,44 @@ const Radio = (props) => {
     return <HelpBlock>{ help }</HelpBlock>;
   };
 
+  const content = (
+    <label
+      key={id}
+      htmlFor={id}
+      className={classNames({
+        [`btn btn-${btnType}`]: asButton,
+        'custom-control custom-radio': !asButton,
+        active: selected,
+      })}
+    >
+
+      <input
+        id={id}
+        type='radio'
+        {...inputOpts}
+        checked={selected}
+        className={asButton ? null : 'custom-control-input'}
+      />
+
+      { !asButton ?
+        <span className='custom-control-indicator' />
+      : null }
+
+      { !asButton ?
+        <div className='custom-control-description'>
+          { label }
+          { helpComponent() }
+        </div>
+      : label }
+
+    </label>
+  );
+
+  if (asButton) return content;
+
   return (
     <div className='radio'>
-      <label
-        key={id}
-        htmlFor={id}
-        className={classNames({
-          [`btn btn-${btnType}`]: asButton,
-          'custom-control custom-radio': !asButton,
-          active: selected,
-        })}
-      >
-
-        <input
-          id={id}
-          type='radio'
-          {...inputOpts}
-          checked={selected}
-          className={asButton ? null : 'custom-control-input'}
-        />
-
-        { !asButton ?
-          <span className='custom-control-indicator' />
-        : null }
-
-        { !asButton ?
-          <div className='custom-control-description'>
-            { label }
-            { helpComponent() }
-          </div>
-        : label }
-
-      </label>
+      { content }
     </div>
   );
 };
