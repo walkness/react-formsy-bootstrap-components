@@ -48,6 +48,7 @@ export default function InputWrapper(WrappedComponent, Wrapper = null, extraWrap
       highlightSuccess: PropTypes.bool,
       idPrefix: PropTypes.string,
       label: PropTypes.string,
+      requiredError: PropTypes.string,
       wrappedComponentRef: PropTypes.func,
       wrapperProps: PropTypes.object,
     });
@@ -67,6 +68,7 @@ export default function InputWrapper(WrappedComponent, Wrapper = null, extraWrap
       isValidValue: () => true,
       label: null,
       resetValue: () => {},
+      requiredError: 'This field is required.',
       setValidations: () => {},
       showError: () => false,
       showRequired: () => false,
@@ -118,7 +120,7 @@ export default function InputWrapper(WrappedComponent, Wrapper = null, extraWrap
         <ul className='form-control-feedback feedback help-block'>
           { this.renderErrorMessages() }
           { this.props.showRequired() && !this.props.isPristine() ?
-            <ErrorMessage message='This field is required.' code='required' />
+            <ErrorMessage message={this.props.requiredError} code='required' />
           : null }
         </ul>
       );
