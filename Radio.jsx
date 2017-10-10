@@ -95,6 +95,7 @@ class RadioGroup extends Component {
   static propTypes = {
     asButtons: PropTypes.bool,
     btnType: btnTypePropType,
+    btnSize: PropTypes.oneOf(['sm', 'lg']),
     children: PropTypes.node,
     disabled: PropTypes.bool,
     formsy: PropTypes.shape({
@@ -160,7 +161,7 @@ class RadioGroup extends Component {
   render() {
     const {
       name, value, label, wrapperClassName, required, disabled, onChange, children, asButtons,
-      btnType, renderFeedback, statusClassName, options, formsy, ...wrapperProps
+      btnType, btnSize, renderFeedback, statusClassName, options, formsy, ...wrapperProps
     } = this.props;
     return (
       <div
@@ -173,7 +174,10 @@ class RadioGroup extends Component {
         </div>
 
         <div
-          className={classNames('control-wrapper', { 'btn-group': asButtons })}
+          className={classNames('control-wrapper', {
+            'btn-group': asButtons,
+            [`btn-group-${btnSize}`]: !!btnSize,
+          })}
           data-toggle={asButtons ? 'buttons' : null}
         >
           { this.renderRadios() }

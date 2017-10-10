@@ -16,9 +16,8 @@ class Input extends Component {
     children: PropTypes.node,
     className: PropTypes.string,
     disabled: PropTypes.bool,
-    formsy: PropTypes.shape({
-      setValue: PropTypes.func,
-    }),
+    formsy: PropTypes.shape({ setValue: PropTypes.func }),
+    inputComponent: PropTypes.any, // eslint-disable-line react/forbid-prop-types
     inputRef: PropTypes.func,
     label: PropTypes.string,
     large: PropTypes.bool,
@@ -41,6 +40,7 @@ class Input extends Component {
     className: null,
     disabled: false,
     formsy: {},
+    inputComponent: 'input',
     inputRef: () => {},
     label: '',
     large: false,
@@ -60,7 +60,7 @@ class Input extends Component {
     const { formsy, onChange } = this.props;
     const { setValue } = formsy;
     if (setValue || onChange) {
-      const value = this.props.prepValue(event.currentTarget.value);
+      const value = this.props.prepValue((event.currentTarget || event.target).value);
       if (setValue) setValue(value);
       if (onChange) onChange(value, event);
     }
@@ -69,19 +69,23 @@ class Input extends Component {
   render() {
     const {
       className, value, label, addOnBefore, addOnAfter, btnBefore, large, small, renderFeedback,
-      inputRef, prepValue, formsy, statusClassName, ...inputOpts
+      inputRef, prepValue, formsy, statusClassName, inputComponent, ...inputOpts
     } = this.props;
 
+    const component = React.createElement(inputComponent, {
+      className: classNames('form-control', className, {
+        'form-control-lg': large,
+        'form-control-sm': small,
+      }),
+      ref: inputRef,
+      ...inputOpts,
+      value: value || (this.props.type === 'color' ? undefined : ''),
+      placeholder: this.props.placeholder || label || '',
+      onChange: this.changeValue,
+    });
+
     if (this.props.type === 'hidden') {
-      return (
-        <input
-          ref={this.props.inputRef}
-          {...inputOpts}
-          value={value || ''}
-          placeholder={this.props.placeholder || label || ''}
-          onChange={this.changeValue}
-        />
-      );
+      return component;
     }
 
     return (
@@ -99,17 +103,7 @@ class Input extends Component {
 
           { btnBefore }
 
-          <input
-            className={classNames('form-control', className, {
-              'form-control-lg': large,
-              'form-control-sm': small,
-            })}
-            ref={inputRef}
-            {...inputOpts}
-            value={value || (this.props.type === 'color' ? undefined : '')}
-            placeholder={this.props.placeholder || label || ''}
-            onChange={this.changeValue}
-          />
+          { component }
 
           { addOnAfter ?
             <span className='input-group-addon'>{ addOnAfter }</span>
