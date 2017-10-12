@@ -147,7 +147,6 @@ export default function InputWrapper(WrappedComponent, Wrapper = null, extraWrap
         highlightError,
         highlightSuccess,
         horizontal,
-        large,
         replaceStatusClass,
         value,
         wrappedComponentRef,
@@ -200,8 +199,8 @@ export default function InputWrapper(WrappedComponent, Wrapper = null, extraWrap
         const pristine = this.props.isPristine();
         return (
           <Wrapper
-            success={valid && !pristine && highlightSuccess}
-            danger={!valid && !pristine && highlightError}
+            success={valid && !pristine}
+            danger={!valid && !pristine}
             empty={!currentValue}
             className={classNames(wrapperClassName, extraWrapperClassName)}
             statusClassName={this.statusClassName}
