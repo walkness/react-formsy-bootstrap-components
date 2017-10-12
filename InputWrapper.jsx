@@ -157,7 +157,7 @@ export default function InputWrapper(WrappedComponent, Wrapper = null, extraWrap
         requiredError,
         ...wrappedComponentProps
       } = noFormsyProps;
-      const { required, disabled, label } = this.props;
+      const { required, disabled, label, type } = this.props;
 
       if (!Wrapper) {
         wrappedComponentProps.wrapperClassName = wrapperClassName;
@@ -192,6 +192,7 @@ export default function InputWrapper(WrappedComponent, Wrapper = null, extraWrap
           label,
           replaceStatusClass,
           required,
+          type,
           ...wrapperProps,
           ...classlessExtraWrapperProps,
         };

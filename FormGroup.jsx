@@ -8,8 +8,14 @@ import { statusClassName as statusOverrideClassName } from './InputWrapper';
 const FormGroup = (props) => {
   const {
     label, helpText, success, danger, warning, required, disabled, empty, horizontal,
-    replaceStatusClass, statusClassName, className, children, id, afterControl, ...extraProps
+    replaceStatusClass, statusClassName, className, children, id, afterControl, type,
+    ...extraProps
   } = props;
+
+  if (type === 'hidden') {
+    return children;
+  }
+
   const baseClasses = ['form-group', className];
   return (
     <div
@@ -47,6 +53,7 @@ const FormGroup = (props) => {
 };
 
 FormGroup.propTypes = {
+  type: PropTypes.string,
   children: PropTypes.node.isRequired,
   label: PropTypes.string,
   helpText: PropTypes.node,
@@ -65,6 +72,7 @@ FormGroup.propTypes = {
 };
 
 FormGroup.defaultProps = {
+  type: undefined,
   label: '',
   helpText: '',
   success: false,
