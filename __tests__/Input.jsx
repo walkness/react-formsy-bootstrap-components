@@ -1,7 +1,6 @@
 import React from 'react';
 import { configure, mount, render } from 'enzyme';
 import Adapter from 'enzyme-adapter-react-15';
-import TestUtils from 'react-test-utils';
 
 import Input from '../Input';
 
