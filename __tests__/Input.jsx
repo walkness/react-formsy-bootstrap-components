@@ -108,7 +108,7 @@ describe('Input', () => {
     it('does nothing if no onChange or Formsy.setValue hooks provided', () => {
       const component = getInput(true);
       const input = component.find('input');
-      TestUtils.Simulate.change(input);
+      input.simulate('change');
     });
 
     const prepValueTest = () => {
