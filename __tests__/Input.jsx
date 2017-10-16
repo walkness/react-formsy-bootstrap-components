@@ -106,7 +106,7 @@ describe('Input', () => {
 
   describe('onChange', () => {
     it('does nothing if no onChange or Formsy.setValue hooks provided', () => {
-      const component = getInput(true);
+      const component = getInput();
       const input = component.find('input');
       input.simulate('change');
     });
