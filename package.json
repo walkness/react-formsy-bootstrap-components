@@ -4,7 +4,8 @@
   "description": "This is a collection of React form components for use with Formsy and Bootstrap.",
   "main": "index.jsx",
   "scripts": {
-    "test": "npm test"
+    "test": "jest --coverage",
+    "coveralls": "cat ./coverage/lcov.info | node node_modules/.bin/coveralls"
   },
   "repository": {
     "type": "git",
@@ -19,6 +20,7 @@
   "devDependencies": {
     "babel": "^6.23.0",
     "babel-jest": "^21.2.0",
+    "coveralls": "^3.0.0",
     "enzyme": "^3.1.0",
     "enzyme-adapter-react-15": "^1.0.1",
     "jest": "^21.2.1",
