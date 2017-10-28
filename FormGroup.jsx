@@ -9,7 +9,7 @@ const FormGroup = (props) => {
   const {
     label, helpText, success, danger, warning, required, disabled, empty, horizontal,
     replaceStatusClass, statusClassName, className, children, id, afterControl, type,
-    ...extraProps
+    labelClassName, controlWrapperClassName, ...extraProps
   } = props;
 
   if (type === 'hidden') {
@@ -29,7 +29,7 @@ const FormGroup = (props) => {
 
       { label ?
         <label
-          className={classNames('control-label', { 'col-form-label': horizontal })}
+          className={classNames('control-label', { 'col-form-label': horizontal }, labelClassName)}
           htmlFor={id}
         >
           { label }
@@ -42,7 +42,7 @@ const FormGroup = (props) => {
         </div>
       : null }
 
-      <div className='control-wrapper'>
+      <div className={classNames('control-wrapper', controlWrapperClassName)}>
         { children }
       </div>
 
@@ -69,6 +69,8 @@ FormGroup.propTypes = {
   afterControl: PropTypes.node,
   id: PropTypes.string.isRequired,
   statusClassName: PropTypes.func,
+  labelClassName: PropTypes.string,
+  controlWrapperClassName: PropTypes.string,
 };
 
 FormGroup.defaultProps = {
@@ -86,6 +88,8 @@ FormGroup.defaultProps = {
   className: '',
   afterControl: null,
   statusClassName: null,
+  labelClassName: null,
+  controlWrapperClassName: null,
 };
 
 export default FormGroup;

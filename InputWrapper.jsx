@@ -154,6 +154,8 @@ export default function InputWrapper(WrappedComponent, Wrapper = null, extraWrap
         wrapperProps,
         idPrefix,
         requiredError,
+        labelClassName,
+        controlWrapperClassName,
         ...wrappedComponentProps
       } = noFormsyProps;
       const { required, disabled, label, type } = this.props;
@@ -192,6 +194,8 @@ export default function InputWrapper(WrappedComponent, Wrapper = null, extraWrap
           replaceStatusClass,
           required,
           type,
+          labelClassName,
+          controlWrapperClassName,
           ...wrapperProps,
           ...classlessExtraWrapperProps,
         };
