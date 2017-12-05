@@ -11,6 +11,7 @@ const formsyPropTypes = {
   getErrorMessages: PropTypes.func,
   getValue: PropTypes.func,
   hasValue: PropTypes.func,
+  innerRef: PropTypes.func,
   isFormDisabled: PropTypes.func,
   isFormSubmitted: PropTypes.func,
   isPristine: PropTypes.func,
