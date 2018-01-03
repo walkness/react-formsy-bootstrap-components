@@ -98,7 +98,7 @@ class Input extends Component {
         >
 
           { addOnBefore ?
-            <span className='input-group-addon'>{ addOnBefore }</span>
+            <div className='input-group-addon input-group-prepend'>{ addOnBefore }</div>
           : null }
 
           { btnBefore }
@@ -106,7 +106,7 @@ class Input extends Component {
           { component }
 
           { addOnAfter ?
-            <span className='input-group-addon'>{ addOnAfter }</span>
+            <div className='input-group-addon input-group-append'>{ addOnAfter }</div>
           : null }
 
         </div>
