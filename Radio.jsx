@@ -50,11 +50,7 @@ const Radio = (props) => {
       />
 
       { !asButton ?
-        <span className='custom-control-indicator' />
-      : null }
-
-      { !asButton ?
-        <div className='custom-control-description'>
+        <div className='custom-control-label'>
           { label }
           { helpComponent() }
         </div>
@@ -175,7 +171,7 @@ class RadioGroup extends Component {
 
         <div
           className={classNames('control-wrapper', {
-            'btn-group': asButtons,
+            'btn-group btn-group-toggle': asButtons,
             [`btn-group-${btnSize}`]: !!btnSize,
           })}
           data-toggle={asButtons ? 'buttons' : null}

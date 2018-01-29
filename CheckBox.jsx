@@ -67,7 +67,7 @@ class Checkbox extends Component {
     } = this.props;
 
     return (
-      <div className={statusClassName('form-check', wrapperClassName)}>
+      <div className={statusClassName('custom-form-check', wrapperClassName)}>
 
         <label htmlFor={this.props.id} className='custom-control custom-checkbox'>
 
@@ -79,9 +79,7 @@ class Checkbox extends Component {
             checked={value}
           />
 
-          <span className='custom-control-indicator' />
-
-          <span className='custom-control-description'>{ label }</span>
+          <span className='custom-control-label'>{ label }</span>
 
           { this.renderHelpBlock() }
 
