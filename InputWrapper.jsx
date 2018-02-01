@@ -130,7 +130,7 @@ export default function InputWrapper(WrappedComponent, Wrapper = null, extraWrap
     @autobind
     getCurrentValue() {
       const { getValue, value } = this.props;
-      return (getValue ? getValue() : value) || null;
+      return getValue ? getValue() : value;
     }
 
     render() {

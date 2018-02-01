@@ -68,9 +68,17 @@ class Input extends Component {
 
   render() {
     const {
-      className, value, label, addOnBefore, addOnAfter, btnBefore, large, small, renderFeedback,
-      inputRef, prepValue, formsy, statusClassName, inputComponent, ...inputOpts
+      className, value: rawValue, label, addOnBefore, addOnAfter, btnBefore, large, small,
+      renderFeedback, inputRef, prepValue, formsy, statusClassName, inputComponent, ...inputOpts
     } = this.props;
+
+    let value = rawValue;
+    if (!(value === 0 || value === '0')) {
+      value = value || '';
+    }
+    if (this.props.type === 'color' && !value) {
+      value = undefined;
+    }
 
     const component = React.createElement(inputComponent, {
       className: classNames('form-control', className, {
@@ -79,7 +87,7 @@ class Input extends Component {
       }),
       ref: inputRef,
       ...inputOpts,
-      value: value || (this.props.type === 'color' ? undefined : ''),
+      value,
       placeholder: this.props.placeholder || label || '',
       onChange: this.changeValue,
     });
