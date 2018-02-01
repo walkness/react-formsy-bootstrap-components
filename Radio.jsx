@@ -116,11 +116,23 @@ class RadioGroup extends Component {
     btnType: 'primary',
   };
 
+  optionsContainsValue(v) {
+    const { options } = this.props;
+    return options.reduce((prev, cur) => {
+      return cur.value === v || prev;
+    }, false);
+  }
+
   @autobind
   changeValue(event) {
     const { formsy, onChange } = this.props;
     const { setValue } = formsy;
-    const value = event.currentTarget.value;
+    let { value } = event.currentTarget;
+    if (value === 'true' && this.optionsContainsValue(true)) {
+      value = true;
+    } else if (value === 'false' && this.optionsContainsValue(false)) {
+      value = false;
+    }
     if (setValue) setValue(value);
     if (onChange) onChange(value, event);
   }
