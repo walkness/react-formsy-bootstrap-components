@@ -118,7 +118,7 @@ export default function InputWrapper(WrappedComponent, Wrapper = null, extraWrap
     @autobind
     renderFeedback() {
       return (
-        <ul className='form-control-feedback feedback invalid-feedback'>
+        <ul className='form-control-feedback feedback invalid-feedback help-block'>
           { this.renderErrorMessages() }
           { this.props.showRequired() && !this.props.isPristine() ?
             <ErrorMessage message={this.props.requiredError} code='required' />
