@@ -66,6 +66,29 @@ class Input extends Component {
     }
   }
 
+  @autobind
+  inputRef(c) {
+    const { inputRef } = this.props;
+    this.inputRef = c;
+    if (inputRef) {
+      inputRef(c);
+    }
+  }
+
+  @autobind
+  focus() {
+    if (this.inputRef && this.inputRef.focus) {
+      this.inputRef.focus();
+    }
+  }
+
+  @autobind
+  blur() {
+    if (this.inputRef && this.inputRef.blur) {
+      this.inputRef.blur();
+    }
+  }
+
   render() {
     const {
       className, value: rawValue, label, addOnBefore, addOnAfter, btnBefore, large, small,
@@ -85,7 +108,7 @@ class Input extends Component {
         'form-control-lg': large,
         'form-control-sm': small,
       }),
-      ref: inputRef,
+      ref: this.inputRef,
       ...inputOpts,
       value,
       placeholder: this.props.placeholder || label || '',
