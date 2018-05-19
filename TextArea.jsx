@@ -61,7 +61,7 @@ class TextArea extends Component {
           className={classNames('form-control', className)}
           {...inputOpts}
           value={this.props.value || ''}
-          placeholder={this.props.placeholder || label || ''}
+          placeholder={this.props.placeholder === undefined ? label || '' : this.props.placeholder}
           onChange={this.changeValue}
         />
 

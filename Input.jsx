@@ -117,7 +117,7 @@ class Input extends Component {
       ref: this.inputRef,
       ...inputOpts,
       value,
-      placeholder: this.props.placeholder || label || '',
+      placeholder: this.props.placeholder === undefined ? label || '' : this.props.placeholder,
       onChange: this.changeValue,
     });
 
