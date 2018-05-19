@@ -29,7 +29,7 @@ class Input extends Component {
     small: PropTypes.bool,
     statusClassName: PropTypes.func,
     type: PropTypes.string,
-    value: PropTypes.string,
+    value: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
   };
 
   static defaultProps = {
@@ -104,6 +104,9 @@ class Input extends Component {
     }
     if (this.props.type === 'color' && !value) {
       value = undefined;
+    }
+    if (value) {
+      value = `${value}`;
     }
 
     const component = React.createElement(inputComponent, {
