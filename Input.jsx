@@ -55,6 +55,18 @@ class Input extends Component {
     value: '',
   };
 
+  constructor(...args) {
+    super(...args);
+    this.inputRef = React.createRef();
+  }
+
+  componentDidMount() {
+    const { inputRef } = this.props;
+    if (inputRef && this.inputRef) {
+      inputRef(this.inputRef.current);
+    }
+  }
+
   @autobind
   changeValue(event) {
     const { formsy, onChange } = this.props;
@@ -67,25 +79,16 @@ class Input extends Component {
   }
 
   @autobind
-  inputRef(c) {
-    const { inputRef } = this.props;
-    this.inputRef = c;
-    if (inputRef) {
-      inputRef(c);
-    }
-  }
-
-  @autobind
   focus() {
-    if (this.inputRef && this.inputRef.focus) {
-      this.inputRef.focus();
+    if (this.inputRef && this.inputRef.current && this.inputRef.current.focus) {
+      this.inputRef.current.focus();
     }
   }
 
   @autobind
   blur() {
-    if (this.inputRef && this.inputRef.blur) {
-      this.inputRef.blur();
+    if (this.inputRef && this.inputRef.current && this.inputRef.current.blur) {
+      this.inputRef.current.blur();
     }
   }
 
