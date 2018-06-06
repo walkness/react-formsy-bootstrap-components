@@ -169,7 +169,7 @@ class RadioGroup extends Component {
   render() {
     const {
       name, value, label, wrapperClassName, required, disabled, onChange, children, asButtons,
-      btnType, btnSize, renderFeedback, statusClassName, options, formsy, ...wrapperProps
+      btnType, btnSize, renderFeedback, statusClassName, options, formsy, helpText, ...wrapperProps
     } = this.props;
     return (
       <div
@@ -180,6 +180,12 @@ class RadioGroup extends Component {
         <div className='control-label radio-group-label'>
           { label }
         </div>
+
+        { helpText &&
+          <div className='form-text help-text'>
+            { helpText }
+          </div>
+        }
 
         <div
           className={classNames('control-wrapper', {

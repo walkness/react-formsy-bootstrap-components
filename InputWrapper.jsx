@@ -163,6 +163,7 @@ export default function InputWrapper(WrappedComponent, Wrapper = null, extraWrap
 
       if (!Wrapper) {
         wrappedComponentProps.wrapperClassName = wrapperClassName;
+        wrappedComponentProps.helpText = helpText
       }
 
       const currentValue = this.getCurrentValue();
