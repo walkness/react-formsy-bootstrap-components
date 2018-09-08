@@ -62,7 +62,7 @@ class Checkbox extends Component {
 
   render() {
     const {
-      value, label, required, disabled, formsy, className, statusClassName,
+      value, label, required, formsy, className, statusClassName,
       renderFeedback, wrapperClassName, help, ...inputOpts
     } = this.props;
 
