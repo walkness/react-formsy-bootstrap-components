@@ -33,6 +33,7 @@ export const statusClassName = (props, ...className) => {
   return classNames({
     'has-success': success,
     'has-danger': danger,
+    'has-error': danger,
     'has-warning': warning,
     'has-help': !!helpText,
     required,
