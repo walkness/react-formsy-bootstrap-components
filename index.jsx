@@ -1,4 +1,4 @@
-import Checkbox from './Checkbox';
+import Checkbox from './CheckBox';
 import Input from './Input';
 import InputWrapper from './InputWrapper';
 import Radio from './Radio';

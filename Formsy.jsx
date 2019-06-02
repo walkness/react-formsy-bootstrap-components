@@ -1,6 +1,6 @@
 import Formsy, { HOC } from 'formsy-react';
 
-import _Checkbox from './Checkbox';
+import _Checkbox from './CheckBox';
 import _Input from './Input';
 import _Radio from './Radio';
 import _Select from './Select';
